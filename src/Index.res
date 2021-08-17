@@ -115,7 +115,7 @@ let default = () => {
                       `focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60`,
                     ],
                   )}>
-                {_ => React.string(`test`)}
+                {_ => React.string(posts[0].title)}
               </Tab.Panel>
             )
             |> React.array}
