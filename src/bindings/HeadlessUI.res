@@ -112,4 +112,24 @@ module Tab = {
       ~className: string=?,
     ) => React.element = "List"
   }
+
+  module Panels = {
+    type state = {selectedIndex: int}
+    @module("@headlessui/react") @scope("Tab") @react.component
+    external make: (
+      ~_as: [#div]=?,
+      ~children: state => React.element,
+      ~className: string=?,
+    ) => React.element = "Panels"
+  }
+
+  module Panel = {
+    type state = {selected: bool}
+    @module("@headlessui/react") @scope("Tab") @react.component
+    external make: (
+      ~_as: [#div]=?,
+      ~className: state => string,
+      ~children: state => React.element,
+    ) => React.element = "Panel"
+  }
 }
