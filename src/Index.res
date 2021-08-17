@@ -16,11 +16,11 @@ let default = () => {
   let (categories, setState) = React.useState(() =>
     Js.Dict.fromArray([
       (
-        "Recent",
+        "CUDA",
         [
           {
             id: 1,
-            title: `Does drinking coffee make you smarter?`,
+            title: `python3 -m pip install -f https://release.oneflow.info oneflow==0.4.0+cu102`,
             date: `5h ago`,
             commentCount: 5,
             shareCount: 2,
@@ -35,7 +35,7 @@ let default = () => {
         ],
       ),
       (
-        "Popular",
+        "CPU",
         [
           {
             id: 1,
@@ -54,7 +54,7 @@ let default = () => {
         ],
       ),
       (
-        "Trending",
+        "CUDA-XLA",
         [
           {
             id: 1,
