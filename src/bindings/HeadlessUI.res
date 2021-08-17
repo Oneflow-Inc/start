@@ -84,3 +84,32 @@ module Transition = {
     ~children: React.element,
   ) => React.element = "Transition"
 }
+
+module Tab = {
+  type state = {selected: bool}
+  @module("@headlessui/react") @react.component
+  external make: (
+    ~_as: [#div]=?,
+    ~className: state => string,
+    ~children: state => React.element,
+  ) => React.element = "Tab"
+
+  module Group = {
+    @module("@headlessui/react") @scope("Tab") @react.component
+    external make: (
+      ~static: bool=?,
+      ~children: React.element,
+      ~className: string=?,
+    ) => React.element = "Group"
+  }
+
+  module List = {
+    type state = {selectedIndex: int}
+    @module("@headlessui/react") @scope("Tab") @react.component
+    external make: (
+      ~_as: [#div]=?,
+      ~children: state => React.element,
+      ~className: string=?,
+    ) => React.element = "List"
+  }
+}
