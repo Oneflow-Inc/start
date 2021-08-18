@@ -267,19 +267,28 @@ function $$default(param) {
                                     }),
                                   className: "mt-2"
                                 })) : React.createElement(React$1.Tab.Group, {
-                              children: React.createElement(React$1.Tab.Panels, {
-                                    children: (function (param) {
-                                        return ["placeholder"].map(function (v, param) {
-                                                    return React.createElement(Index$Pip$Panel, {
-                                                                cmd: pipInstallCommnad(state.selected)
-                                                              });
-                                                  });
-                                      }),
-                                    className: "mt-2"
-                                  }),
+                              children: null,
                               defaultIndex: defaultIndexOfCudaVersion(state),
                               key: "CPU"
-                            })))
+                            }, React.createElement(React$1.Tab.List, {
+                                  children: (function (param) {
+                                      return ["placeholder"].map(function (v) {
+                                                  return React.createElement(Index$Variant$Option, {
+                                                              name: v
+                                                            });
+                                                });
+                                    }),
+                                  className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
+                                }), React.createElement(React$1.Tab.Panels, {
+                                  children: (function (param) {
+                                      return ["placeholder"].map(function (v, param) {
+                                                  return React.createElement(Index$Pip$Panel, {
+                                                              cmd: pipInstallCommnad(state.selected)
+                                                            });
+                                                });
+                                    }),
+                                  className: "mt-2"
+                                }))))
             });
 }
 
