@@ -124,14 +124,22 @@ function $$default(param) {
                                                               }),
                                                             children: (function (param) {
                                                                 var match = state.build;
+                                                                var tmp;
                                                                 switch (match) {
                                                                   case "Nightly" :
-                                                                      return "https://staging.oneflow.info/branch/master/cu101";
+                                                                      tmp = "https://staging.oneflow.info/branch/master/cu101";
+                                                                      break;
                                                                   case "Stable" :
-                                                                      return "https://release.oneflow.info";
+                                                                      tmp = "https://release.oneflow.info";
+                                                                      break;
                                                                   default:
-                                                                    return "";
+                                                                    tmp = "[N/A]";
                                                                 }
+                                                                return [
+                                                                          "python3 -m pip install oneflow -f",
+                                                                          tmp,
+                                                                          ""
+                                                                        ].join(" ");
                                                               }),
                                                             key: String(idx)
                                                           });

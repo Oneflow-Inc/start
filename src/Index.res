@@ -49,11 +49,18 @@ type selected = {
 }
 
 let pipInstallCommnad = (selected: selected) => {
-  switch selected.build {
-  | "Stable" => "https://release.oneflow.info"
-  | "Nightly" => "https://staging.oneflow.info/branch/master/cu101"
-  | _ => ""
-  }
+  Js.Array.joinWith(
+    " ",
+    [
+      "python3 -m pip install oneflow -f",
+      switch selected.build {
+      | "Stable" => "https://release.oneflow.info"
+      | "Nightly" => "https://staging.oneflow.info/branch/master/cu101"
+      | _ => "[N/A]"
+      },
+      "",
+    ],
+  )
 }
 
 let default = () => {
