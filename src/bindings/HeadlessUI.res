@@ -99,6 +99,7 @@ module Tab = {
     external make: (
       ~static: bool=?,
       ~children: React.element,
+      ~onChange: int => unit=?,
       ~className: string=?,
     ) => React.element = "Group"
   }

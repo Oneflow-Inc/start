@@ -59,7 +59,7 @@ let default = () => {
     <div
       className=`rounded-xl overflow-hidden bg-gradient-to-r from-sky-400 to-blue-600 flex flex-col items-center justify-center w-full`>
       <div className="w-full max-w-md px-2 py-16 sm:px-0">
-        <Tab.Group>
+        <Tab.Group onChange={index => setState(s => {...s, build: builds[index]})}>
           <Tab.List className="flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
             {({selectedIndex}) =>
               builds
