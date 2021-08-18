@@ -163,6 +163,7 @@ function $$default(param) {
       return xlaCudaVersions;
     }
   };
+  var versions = availableCudaVersions(state);
   return React.createElement(Index$Hero, {
               children: React.createElement("div", {
                     className: "rounded-xl overflow-hidden bg-gradient-to-r from-sky-400 to-blue-600 flex flex-col items-center justify-center w-full"
@@ -211,21 +212,16 @@ function $$default(param) {
                                           });
                               }),
                             defaultIndex: defaultIndexOfCudaVersion(state)
-                          }, React.createElement(React$1.Tab.List, {
-                                children: (function (param) {
-                                    var version = availableCudaVersions(state);
-                                    if (version !== undefined) {
-                                      return version.map(function (v) {
+                          }, versions !== undefined ? React.createElement(React$1.Tab.List, {
+                                  children: (function (param) {
+                                      return versions.map(function (v) {
                                                   return React.createElement(Index$Variant$Option, {
                                                               name: v
                                                             });
                                                 });
-                                    } else {
-                                      return React.createElement("div", undefined);
-                                    }
-                                  }),
-                                className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
-                              }), React.createElement(React$1.Tab.Panels, {
+                                    }),
+                                  className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
+                                }) : React.createElement("div", undefined), React.createElement(React$1.Tab.Panels, {
                                 children: (function (param) {
                                     return cudaVersions.map(function (v, idx) {
                                                 return React.createElement(React$1.Tab.Panel, {
