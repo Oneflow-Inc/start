@@ -45,15 +45,13 @@ module Variant = {
 type selected = {
   build: string,
   platform: string,
-  package: string,
   cudaVersion: string,
 }
 let default = () => {
-  let (categories, setState) = React.useState(() => {
+  let (state, setState) = React.useState(() => {
     {
       build: `Stable`,
       platform: `CUDA`,
-      package: `pip`,
       cudaVersion: `10.2`,
     }
   })
@@ -84,13 +82,15 @@ let default = () => {
               |> Js.Array.map((category: string) => <Variant.Option name=category />)
               |> React.array}
           </Tab.List>
+        </Tab.Group>
+        <Tab.Group>
           <Tab.Panels className="mt-2">
             {_ =>
               [1, 2, 3, 4, 5]
               |> Js.Array.mapi((posts, idx) =>
                 <Tab.Panel
                   key={string_of_int(idx)}
-                  className={_ =>
+                  className={({selected}) =>
                     Js.Array.joinWith(
                       " ",
                       [
