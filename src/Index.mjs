@@ -230,7 +230,8 @@ function $$default(param) {
                                                             });
                                                 });
                                     }),
-                                  className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
+                                  className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl",
+                                  key: String(versions.length)
                                 }) : React.createElement("div", undefined), React.createElement(React$1.Tab.Panels, {
                                 children: (function (param) {
                                     return cudaVersions.map(function (v, param) {

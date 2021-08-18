@@ -138,18 +138,23 @@ let default = () => {
         <Tab.Group
           defaultIndex={defaultIndexOfCudaVersion(state)}
           onChange={index => dispatch(SelectCudaVersion(cudaVersions[index]))}>
-          {switch availableCudaVersions(state) {
-          | Some(versions) =>
-            <Tab.List className="my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
-              {_ =>
-                versions
-                |> Js.Array.map(v => {
-                  <Variant.Option name=v />
-                })
-                |> React.array}
-            </Tab.List>
-          | None => <div />
-          }}
+          {
+            let versions = availableCudaVersions(state)
+            switch versions {
+            | Some(versions) =>
+              <Tab.List
+                key={Js.Array.length(versions) |> string_of_int}
+                className="my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
+                {_ =>
+                  versions
+                  |> Js.Array.map(v => {
+                    <Variant.Option name=v />
+                  })
+                  |> React.array}
+              </Tab.List>
+            | None => <div />
+            }
+          }
           <Tab.Panels className="mt-2">
             {_ =>
               cudaVersions
