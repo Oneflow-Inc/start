@@ -125,8 +125,8 @@ function $$default(param) {
   ];
   var platforms = [
     "CUDA",
-    "CPU",
-    "CUDA_XLA"
+    "CUDA_XLA",
+    "CPU"
   ];
   var cudaVersions = [
     "10.0",
@@ -233,24 +233,20 @@ function $$default(param) {
                                                               }),
                                                             children: (function (param) {
                                                                 var selected = state.selected;
-                                                                var match = selected.build;
-                                                                var tmp;
-                                                                if (match) {
+                                                                var platformPlusName = function (p) {
                                                                   var ver = selected.platform;
-                                                                  var tmp$1;
-                                                                  tmp$1 = typeof ver === "number" ? "cpu" : (
-                                                                      ver.TAG === /* CUDA */0 ? "cu" + ver._0.replace(".", "") : "cu" + ver._0.replace(".", "") + ".xla"
-                                                                    );
-                                                                  tmp = [
-                                                                      "https://staging.oneflow.info/branch/master/",
-                                                                      tmp$1
-                                                                    ].join("");
-                                                                } else {
-                                                                  tmp = "https://release.oneflow.info";
-                                                                }
+                                                                  if (typeof ver === "number") {
+                                                                    return "cpu";
+                                                                  } else if (ver.TAG === /* CUDA */0) {
+                                                                    return "cu" + ver._0.replace(".", "");
+                                                                  } else {
+                                                                    return "cu" + ver._0.replace(".", "") + ".xla";
+                                                                  }
+                                                                };
+                                                                var match = selected.build;
                                                                 return [
                                                                           "python3 -m pip install oneflow -f",
-                                                                          tmp,
+                                                                          match ? "https://staging.oneflow.info/branch/master/" + platformPlusName(selected.platform) : "https://release.oneflow.info oneflow==0.4.0+" + platformPlusName(selected.platform),
                                                                           ""
                                                                         ].join(" ");
                                                               }),

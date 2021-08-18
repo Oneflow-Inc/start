@@ -37,24 +37,22 @@ module Variant = {
 }
 
 let pipInstallCommnad = (selected: Variant.t) => {
+  let platformPlusName = (p: Variant.platform) => {
+    switch selected.platform {
+    | Variant.CUDA(ver) => "cu" ++ Js.String.replace(".", "", ver)
+    | Variant.CUDA_XLA(ver) => "cu" ++ Js.String.replace(".", "", ver) ++ ".xla"
+    | Variant.CPU => "cpu"
+    }
+  }
   Js.Array.joinWith(
     " ",
     [
       "python3 -m pip install oneflow -f",
       switch selected.build {
-      | Variant.Stable => "https://release.oneflow.info"
+      | Variant.Stable =>
+        "https://release.oneflow.info oneflow==0.4.0+" ++ platformPlusName(selected.platform)
       | Variant.Nightly =>
-        Js.Array.joinWith(
-          "",
-          [
-            "https://staging.oneflow.info/branch/master/",
-            switch selected.platform {
-            | Variant.CUDA(ver) => "cu" ++ Js.String.replace(".", "", ver)
-            | Variant.CUDA_XLA(ver) => "cu" ++ Js.String.replace(".", "", ver) ++ ".xla"
-            | Variant.CPU => "cpu"
-            },
-          ],
-        )
+        "https://staging.oneflow.info/branch/master/" ++ platformPlusName(selected.platform)
       },
       "",
     ],
@@ -103,7 +101,7 @@ let default = () => {
     },
   )
   let builds = ["Stable", "Nightly"]
-  let platforms = ["CUDA", "CPU", "CUDA_XLA"]
+  let platforms = ["CUDA", "CUDA_XLA", "CPU"]
   let cudaVersions = ["10.0", "10.1", "10.2", "11.0", "11.1", "11.2"]
   let xlaCudaVersions = ["10.0", "10.1", "10.2", "11.0", "11.1"]
   let defaultIndexOfCudaVersion = (state: state) =>
