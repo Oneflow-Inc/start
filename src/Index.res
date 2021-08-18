@@ -16,10 +16,7 @@ let xlaCudaVersions = [`10.0`, `10.1`, `10.2`, `11.0`, `11.1`]
 let platforms = [`CUDA`, `CPU`, `CUDA-XLA`]
 module Variant = {
   type build = Stable | Nightly
-  type cuda_version = CUDA_10_0 | CUDA_10_1 | CUDA_10_2 | CUDA_11_0 | CUDA_11_1 | CUDA_11_2
-  type xla_cuda_version = CUDA_10_0 | CUDA_10_1 | CUDA_10_2 | CUDA_11_0 | CUDA_11_1
-  type platform =
-    CUDA({cuda_version: cuda_version}) | CPU | CUDA_XLA({cuda_version: xla_cuda_version})
+  type platform = CUDA(string) | CPU | CUDA_XLA(string)
   @deriving(accessors)
   type t = {build: build, platform: platform}
   module Option = {
@@ -61,10 +58,33 @@ let default = () => {
   let (state, setState) = React.useState(() => {
     let s: Variant.t = {
       build: Variant.Stable,
-      platform: Variant.CUDA({cuda_version: Variant.CUDA_10_2}),
+      platform: Variant.CUDA("10.2"),
     }
     s
   })
+  let availableCUDAVersions = (state: Variant.t) =>
+    switch state.platform {
+    | Variant.CUDA(_) => ["10.0", "10.1", "10.2", "11.0", "11.1", "11.2"]
+    | Variant.CUDA_XLA(_) => ["10.0", "10.1", "10.2", "11.0", "11.1"]
+    | Variant.CPU => []
+    }
+  let updatePlatfrom = (currentPlatform: Variant.platform, displayName: string) =>
+    switch displayName {
+    | "CUDA" =>
+      switch currentPlatform {
+      | Variant.CUDA_XLA(ver) => Variant.CUDA(ver)
+      | _ => Variant.CUDA("10.2")
+      }
+    | "CUDA-XLA" =>
+      switch currentPlatform {
+      | Variant.CUDA(`11.2`) => Variant.CUDA_XLA("10.1")
+      | Variant.CUDA(ver) => Variant.CUDA_XLA(ver)
+      | _ => Variant.CUDA_XLA("10.1")
+      }
+    | "CPU" => Variant.CPU
+    | _ => Variant.CUDA("10.2")
+    }
+
   <Hero>
     <div
       className=`rounded-xl overflow-hidden bg-gradient-to-r from-sky-400 to-blue-600 flex flex-col items-center justify-center w-full`>
@@ -83,7 +103,9 @@ let default = () => {
               |> React.array}
           </Tab.List>
         </Tab.Group>
-        <Tab.Group>
+        <Tab.Group
+          onChange={index =>
+            setState(s => {...s, platform: updatePlatfrom(s.platform, platforms[index])})}>
           <Tab.List className="my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
             {({selectedIndex}) =>
               platforms
@@ -94,16 +116,16 @@ let default = () => {
         <Tab.Group>
           <Tab.List className="flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
             {({selectedIndex}) =>
-              allCudaVersions
+              availableCUDAVersions(state)
               |> Js.Array.map((category: string) => <Variant.Option name=category />)
               |> React.array}
           </Tab.List>
           <Tab.Panels className="mt-2">
             {_ =>
-              [1, 2, 3, 4, 5]
-              |> Js.Array.mapi((posts, idx) =>
+              availableCUDAVersions(state)
+              |> Js.Array.mapi((v, idx) =>
                 <Tab.Panel
-                  key={string_of_int(idx)}
+                  key=v
                   className={({selected}) =>
                     Js.Array.joinWith(
                       " ",

@@ -12,15 +12,6 @@ function Index$Hero(Props) {
                 }, children));
 }
 
-var allCudaVersions = [
-  "10.0",
-  "10.1",
-  "10.2",
-  "11.0",
-  "11.1",
-  "11.2"
-];
-
 var platforms = [
   "CUDA",
   "CPU",
@@ -55,12 +46,83 @@ function $$default(param) {
                 build: /* Stable */0,
                 platform: {
                   TAG: /* CUDA */0,
-                  cuda_version: /* CUDA_10_2 */2
+                  _0: "10.2"
                 }
               };
       });
   var setState = match[1];
   var state = match[0];
+  var availableCUDAVersions = function (state) {
+    var match = state.platform;
+    if (typeof match === "number") {
+      return [];
+    } else if (match.TAG === /* CUDA */0) {
+      return [
+              "10.0",
+              "10.1",
+              "10.2",
+              "11.0",
+              "11.1",
+              "11.2"
+            ];
+    } else {
+      return [
+              "10.0",
+              "10.1",
+              "10.2",
+              "11.0",
+              "11.1"
+            ];
+    }
+  };
+  var updatePlatfrom = function (currentPlatform, displayName) {
+    switch (displayName) {
+      case "CPU" :
+          return /* CPU */0;
+      case "CUDA" :
+          if (typeof currentPlatform === "number" || currentPlatform.TAG === /* CUDA */0) {
+            return {
+                    TAG: /* CUDA */0,
+                    _0: "10.2"
+                  };
+          } else {
+            return {
+                    TAG: /* CUDA */0,
+                    _0: currentPlatform._0
+                  };
+          }
+      case "CUDA-XLA" :
+          if (typeof currentPlatform === "number") {
+            return {
+                    TAG: /* CUDA_XLA */1,
+                    _0: "10.1"
+                  };
+          }
+          if (currentPlatform.TAG !== /* CUDA */0) {
+            return {
+                    TAG: /* CUDA_XLA */1,
+                    _0: "10.1"
+                  };
+          }
+          var ver = currentPlatform._0;
+          if (ver === "11.2") {
+            return {
+                    TAG: /* CUDA_XLA */1,
+                    _0: "10.1"
+                  };
+          } else {
+            return {
+                    TAG: /* CUDA_XLA */1,
+                    _0: ver
+                  };
+          }
+      default:
+        return {
+                TAG: /* CUDA */0,
+                _0: "10.2"
+              };
+    }
+  };
   return React.createElement(Index$Hero, {
               children: React.createElement("div", {
                     className: "rounded-xl overflow-hidden bg-gradient-to-r from-sky-400 to-blue-600 flex flex-col items-center justify-center w-full"
@@ -96,12 +158,20 @@ function $$default(param) {
                                                 });
                                     }),
                                   className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
-                                })
+                                }),
+                            onChange: (function (index) {
+                                return Curry._1(setState, (function (s) {
+                                              return {
+                                                      build: s.build,
+                                                      platform: updatePlatfrom(s.platform, Caml_array.get(platforms, index))
+                                                    };
+                                            }));
+                              })
                           }), React.createElement(React$1.Tab.Group, {
                             children: null
                           }, React.createElement(React$1.Tab.List, {
                                 children: (function (param) {
-                                    return allCudaVersions.map(function (category) {
+                                    return availableCUDAVersions(state).map(function (category) {
                                                 return React.createElement(Index$Variant$Option, {
                                                             name: category
                                                           });
@@ -110,13 +180,7 @@ function $$default(param) {
                                 className: "flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
                               }), React.createElement(React$1.Tab.Panels, {
                                 children: (function (param) {
-                                    return [
-                                              1,
-                                              2,
-                                              3,
-                                              4,
-                                              5
-                                            ].map(function (posts, idx) {
+                                    return availableCUDAVersions(state).map(function (v, idx) {
                                                 return React.createElement(React$1.Tab.Panel, {
                                                             className: (function (param) {
                                                                 return [
@@ -132,7 +196,7 @@ function $$default(param) {
                                                                           ""
                                                                         ].join(" ");
                                                               }),
-                                                            key: String(idx)
+                                                            key: v
                                                           });
                                               });
                                   }),
