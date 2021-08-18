@@ -103,7 +103,7 @@ let default = () => {
                         `w-full py-2.5 text-sm leading-5 font-medium rounded-lg`,
                         `focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60`,
                         selected
-                          ? `bg-white shadow text-blue-700 text-opacity-60`
+                          ? `bg-white shadow text-blue-700 text-opacity-80`
                           : `text-blue-100 hover:bg-white hover:bg-opacity-10 hover:text-white`,
                       ],
                     )}>
