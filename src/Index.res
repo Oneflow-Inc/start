@@ -18,6 +18,32 @@ module Hero = {
   let make = (~children) => <div> <div className=""> children </div> </div>
 }
 
+let allCudaVersions = [`10.0`, `10.1`, `10.2`, `11.0`, `11.1`, `11.2`]
+let xlaCudaVersions = [`10.0`, `10.1`, `10.2`, `11.0`, `11.1`]
+let builds = [`Stable`, `Nightly`]
+let platforms = [`CUDA`, `CPU`, `CUDA-XLA`]
+module Variant = {
+  module Option = {
+    @react.component
+    let make = (~name) =>
+      <Tab
+        key={name}
+        className={({selected}) =>
+          Js.Array.joinWith(
+            " ",
+            [
+              `w-full py-2.5 text-sm leading-5 font-medium rounded-lg`,
+              `focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60`,
+              selected
+                ? `bg-white shadow text-blue-700 text-opacity-80`
+                : `text-blue-100 hover:bg-white hover:bg-opacity-10 hover:text-white`,
+            ],
+          )}>
+        {({selected}) => React.string(name)}
+      </Tab>
+  }
+}
+
 let default = () => {
   let (categories, setState) = React.useState(() =>
     Js.Dict.fromArray([
@@ -87,24 +113,20 @@ let default = () => {
         <Tab.Group>
           <Tab.List className="flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
             {({selectedIndex}) =>
+              builds
+              |> Js.Array.map((category: string) => <Variant.Option name=category />)
+              |> React.array}
+          </Tab.List>
+          <Tab.List className="my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
+            {({selectedIndex}) =>
               Js.Dict.keys(categories)
-              |> Js.Array.map((category: string) =>
-                <Tab
-                  key={category}
-                  className={({selected}) =>
-                    Js.Array.joinWith(
-                      " ",
-                      [
-                        `w-full py-2.5 text-sm leading-5 font-medium rounded-lg`,
-                        `focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60`,
-                        selected
-                          ? `bg-white shadow text-blue-700 text-opacity-80`
-                          : `text-blue-100 hover:bg-white hover:bg-opacity-10 hover:text-white`,
-                      ],
-                    )}>
-                  {({selected}) => React.string(category)}
-                </Tab>
-              )
+              |> Js.Array.map((category: string) => <Variant.Option name=category />)
+              |> React.array}
+          </Tab.List>
+          <Tab.List className="flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
+            {({selectedIndex}) =>
+              allCudaVersions
+              |> Js.Array.map((category: string) => <Variant.Option name=category />)
               |> React.array}
           </Tab.List>
           <Tab.Panels className="mt-2">
