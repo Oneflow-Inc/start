@@ -23,6 +23,12 @@ let xlaCudaVersions = [`10.0`, `10.1`, `10.2`, `11.0`, `11.1`]
 let builds = [`Stable`, `Nightly`]
 let platforms = [`CUDA`, `CPU`, `CUDA-XLA`]
 module Variant = {
+  type build = Stable | Nightly
+  type cuda_version = CUDA_10_0 | CUDA_10_1 | CUDA_10_2 | CUDA_11_0 | CUDA_11_1 | CUDA_11_2
+  type xla_cuda_version = CUDA_10_0 | CUDA_10_1 | CUDA_10_2 | CUDA_11_0 | CUDA_11_1
+  type platform =
+    CUDA({cuda_version: cuda_version}) | CPU | CUDA_XLA({cuda_version: xla_cuda_version})
+  type t = {build: build, platform: platform}
   module Option = {
     @react.component
     let make = (~name) =>
