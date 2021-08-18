@@ -15,12 +15,7 @@ type category = {
 
 module Hero = {
   @react.component
-  let make = (~children) =>
-    <div>
-      <div className="">
-        <div className="w-full h-[360px]"> <div className="w-full h-full"> children </div> </div>
-      </div>
-    </div>
+  let make = (~children) => <div> <div className=""> children </div> </div>
 }
 
 let default = () => {
