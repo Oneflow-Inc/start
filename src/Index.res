@@ -47,6 +47,15 @@ type selected = {
   platform: string,
   cudaVersion: string,
 }
+
+let pipInstallCommnad = (selected: selected) => {
+  switch selected.build {
+  | "Stable" => "https://release.oneflow.info"
+  | "Nightly" => "https://staging.oneflow.info/branch/master/cu101"
+  | _ => ""
+  }
+}
+
 let default = () => {
   let (state, setState) = React.useState(() => {
     {
@@ -96,8 +105,7 @@ let default = () => {
                         `focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60`,
                       ],
                     )}>
-                  {_ =>
-                    React.string(`python3 -m pip install -f https://release.oneflow.info oneflow==0.4.0+cu102`)}
+                  {_ => React.string(pipInstallCommnad(state))}
                 </Tab.Panel>
               )
               |> React.array}

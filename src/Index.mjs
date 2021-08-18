@@ -58,6 +58,7 @@ function $$default(param) {
               };
       });
   var setState = match[1];
+  var state = match[0];
   return React.createElement(Index$Hero, {
               children: React.createElement("div", {
                     className: "rounded-xl overflow-hidden bg-gradient-to-r from-sky-400 to-blue-600 flex flex-col items-center justify-center w-full"
@@ -122,7 +123,15 @@ function $$default(param) {
                                                                         ].join(" ");
                                                               }),
                                                             children: (function (param) {
-                                                                return "python3 -m pip install -f https://release.oneflow.info oneflow==0.4.0+cu102";
+                                                                var match = state.build;
+                                                                switch (match) {
+                                                                  case "Nightly" :
+                                                                      return "https://staging.oneflow.info/branch/master/cu101";
+                                                                  case "Stable" :
+                                                                      return "https://release.oneflow.info";
+                                                                  default:
+                                                                    return "";
+                                                                }
                                                               }),
                                                             key: String(idx)
                                                           });
