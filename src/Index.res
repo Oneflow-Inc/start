@@ -101,8 +101,8 @@ let default = () => {
   let xlaCudaVersions = ["10.0", "10.1", "10.2", "11.0", "11.1"]
   let defaultIndexOfCudaVersion = (state: state) =>
     switch state.selected.platform {
-    | Variant.CUDA(v) => Js.Array.indexOf(v, cudaVersions)
-    | Variant.CUDA_XLA(v) => Js.Array.indexOf(v, xlaCudaVersions)
+    | Variant.CUDA(_) => Js.Array.indexOf("10.2", cudaVersions)
+    | Variant.CUDA_XLA(_) => Js.Array.indexOf("10.1", xlaCudaVersions)
     | Variant.CPU => 0
     }
   let availableCudaVersions = (state: state) =>
@@ -136,7 +136,12 @@ let default = () => {
           </Tab.List>
         </Tab.Group>
         <Tab.Group
-          defaultIndex={defaultIndexOfCudaVersion(state)}
+          defaultIndex={
+            let index = defaultIndexOfCudaVersion(state)
+
+            // Js.log2("index", index)
+            index
+          }
           onChange={index => dispatch(SelectCudaVersion(cudaVersions[index]))}>
           {switch availableCudaVersions(state) {
           | Some(versions) =>

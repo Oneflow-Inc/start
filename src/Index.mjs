@@ -154,13 +154,13 @@ function $$default(param) {
     "11.1"
   ];
   var defaultIndexOfCudaVersion = function (state) {
-    var v = state.selected.platform;
-    if (typeof v === "number") {
+    var match = state.selected.platform;
+    if (typeof match === "number") {
       return 0;
-    } else if (v.TAG === /* CUDA */0) {
-      return cudaVersions.indexOf(v._0);
+    } else if (match.TAG === /* CUDA */0) {
+      return cudaVersions.indexOf("10.2");
     } else {
-      return xlaCudaVersions.indexOf(v._0);
+      return xlaCudaVersions.indexOf("10.1");
     }
   };
   var availableCudaVersions = function (state) {
