@@ -202,7 +202,8 @@ function $$default(param) {
                                   children: (function (param) {
                                       return builds.map(function (b) {
                                                   return React.createElement(Index$Variant$Option, {
-                                                              name: b
+                                                              name: b,
+                                                              key: b
                                                             });
                                                 });
                                     }),
@@ -219,7 +220,8 @@ function $$default(param) {
                                   children: (function (param) {
                                       return platforms.map(function (v) {
                                                   return React.createElement(Index$Variant$Option, {
-                                                              name: v
+                                                              name: v,
+                                                              key: v
                                                             });
                                                 });
                                     }),
@@ -232,34 +234,7 @@ function $$default(param) {
                                           });
                               })
                           }), React.createElement(React$1.Tab.Group, {
-                            children: [
-                              React.createElement(React$1.Tab.List, {
-                                    children: (function (param) {
-                                        return cudaVersions.map(function (v) {
-                                                    var match = state.selected.platform;
-                                                    var tmp;
-                                                    tmp = typeof match === "number" || match.TAG === /* CUDA */0 || v !== "11.2" ? false : true;
-                                                    return React.createElement(Index$Variant$Option, {
-                                                                name: v,
-                                                                hidden: tmp
-                                                              });
-                                                  });
-                                      }),
-                                    className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl" + (
-                                      typeof match$1 === "number" ? " hidden" : ""
-                                    )
-                                  }),
-                              React.createElement(React$1.Tab.Panels, {
-                                    children: (function (param) {
-                                        return cudaVersions.map(function (v, param) {
-                                                    return React.createElement(Index$Pip$Panel, {
-                                                                cmd: pipInstallCommnad(state.selected)
-                                                              });
-                                                  });
-                                      }),
-                                    className: "mt-2"
-                                  })
-                            ],
+                            children: null,
                             onChange: (function (index) {
                                 return Curry._1(dispatch, {
                                             TAG: /* SelectCudaVersion */2,
@@ -267,7 +242,33 @@ function $$default(param) {
                                           });
                               }),
                             defaultIndex: defaultIndexOfCudaVersion(state)
-                          })))
+                          }, React.createElement(React$1.Tab.List, {
+                                children: (function (param) {
+                                    return cudaVersions.map(function (v) {
+                                                var match = state.selected.platform;
+                                                var tmp;
+                                                tmp = typeof match === "number" || match.TAG === /* CUDA */0 || v !== "11.2" ? false : true;
+                                                return React.createElement(Index$Variant$Option, {
+                                                            name: v,
+                                                            hidden: tmp,
+                                                            key: v
+                                                          });
+                                              });
+                                  }),
+                                className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl" + (
+                                  typeof match$1 === "number" ? " hidden" : ""
+                                )
+                              }), React.createElement(React$1.Tab.Panels, {
+                                children: (function (param) {
+                                    return cudaVersions.map(function (v, param) {
+                                                return React.createElement(Index$Pip$Panel, {
+                                                            cmd: pipInstallCommnad(state.selected),
+                                                            key: v
+                                                          });
+                                              });
+                                  }),
+                                className: "mt-2"
+                              }))))
             });
 }
 

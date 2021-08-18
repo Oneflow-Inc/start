@@ -140,7 +140,7 @@ let default = () => {
             {_ =>
               builds
               |> Js.Array.map(b => {
-                <Variant.Option name=b />
+                <Variant.Option key=b name=b />
               })
               |> React.array}
           </Tab.List>
@@ -150,7 +150,7 @@ let default = () => {
             {_ =>
               platforms
               |> Js.Array.map(v => {
-                <Variant.Option name=v />
+                <Variant.Option key=v name=v />
               })
               |> React.array}
           </Tab.List>
@@ -158,33 +158,34 @@ let default = () => {
         <Tab.Group
           defaultIndex={defaultIndexOfCudaVersion(state)}
           onChange={index => dispatch(SelectCudaVersion(cudaVersions[index]))}>
-          {[
-            <Tab.List
-              className={"my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl" ++
-              switch state.selected.platform {
-              | Variant.CPU => " hidden"
-              | _ => ""
-              }}>
-              {_ =>
-                cudaVersions
-                |> Js.Array.map(v => {
-                  <Variant.Option
-                    name=v
-                    hidden={switch (state.selected.platform, v) {
-                    | (Variant.CUDA_XLA(_), "11.2") => true
-                    | _ => false
-                    }}
-                  />
-                })
-                |> React.array}
-            </Tab.List>,
-            <Tab.Panels className="mt-2">
-              {_ =>
-                cudaVersions
-                |> Js.Array.mapi((v, _) => <Pip.Panel cmd={pipInstallCommnad(state.selected)} />)
-                |> React.array}
-            </Tab.Panels>,
-          ] |> React.array}
+          <Tab.List
+            className={"my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl" ++
+            switch state.selected.platform {
+            | Variant.CPU => " hidden"
+            | _ => ""
+            }}>
+            {_ =>
+              cudaVersions
+              |> Js.Array.map(v => {
+                <Variant.Option
+                  name=v
+                  key=v
+                  hidden={switch (state.selected.platform, v) {
+                  | (Variant.CUDA_XLA(_), "11.2") => true
+                  | _ => false
+                  }}
+                />
+              })
+              |> React.array}
+          </Tab.List>
+          <Tab.Panels className="mt-2">
+            {_ =>
+              cudaVersions
+              |> Js.Array.mapi((v, _) =>
+                <Pip.Panel key=v cmd={pipInstallCommnad(state.selected)} />
+              )
+              |> React.array}
+          </Tab.Panels>
         </Tab.Group>
       </div>
     </div>
