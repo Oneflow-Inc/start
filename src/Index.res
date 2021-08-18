@@ -12,7 +12,7 @@ module Hero = {
 
 let allCudaVersions = [`10.0`, `10.1`, `10.2`, `11.0`, `11.1`, `11.2`]
 let xlaCudaVersions = [`10.0`, `10.1`, `10.2`, `11.0`, `11.1`]
-let builds = [`Stable`, `Nightly`]
+
 let platforms = [`CUDA`, `CPU`, `CUDA-XLA`]
 module Variant = {
   type build = Stable | Nightly
@@ -20,6 +20,7 @@ module Variant = {
   type xla_cuda_version = CUDA_10_0 | CUDA_10_1 | CUDA_10_2 | CUDA_11_0 | CUDA_11_1
   type platform =
     CUDA({cuda_version: cuda_version}) | CPU | CUDA_XLA({cuda_version: xla_cuda_version})
+  @deriving(accessors)
   type t = {build: build, platform: platform}
   module Option = {
     @react.component
@@ -41,22 +42,15 @@ module Variant = {
       </Tab>
   }
 }
-
-type selected = {
-  build: string,
-  platform: string,
-  cudaVersion: string,
-}
-
-let pipInstallCommnad = (selected: selected) => {
+let builds = [Variant.Stable, Variant.Nightly]
+let pipInstallCommnad = (selected: Variant.t) => {
   Js.Array.joinWith(
     " ",
     [
       "python3 -m pip install oneflow -f",
       switch selected.build {
-      | "Stable" => "https://release.oneflow.info"
-      | "Nightly" => "https://staging.oneflow.info/branch/master/cu101"
-      | _ => "[N/A]"
+      | Variant.Stable => "https://release.oneflow.info"
+      | Variant.Nightly => "https://staging.oneflow.info/branch/master/cu101"
       },
       "",
     ],
@@ -65,11 +59,11 @@ let pipInstallCommnad = (selected: selected) => {
 
 let default = () => {
   let (state, setState) = React.useState(() => {
-    {
-      build: `Stable`,
-      platform: `CUDA`,
-      cudaVersion: `10.2`,
+    let s: Variant.t = {
+      build: Variant.Stable,
+      platform: Variant.CUDA({cuda_version: Variant.CUDA_10_2}),
     }
+    s
   })
   <Hero>
     <div
@@ -79,7 +73,13 @@ let default = () => {
           <Tab.List className="flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
             {({selectedIndex}) =>
               builds
-              |> Js.Array.map((category: string) => <Variant.Option name=category />)
+              |> Js.Array.map(b => {
+                let s = switch b {
+                | Variant.Stable => "Stable"
+                | Variant.Nightly => "Nightly"
+                }
+                <Variant.Option name=s />
+              })
               |> React.array}
           </Tab.List>
         </Tab.Group>

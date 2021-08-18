@@ -21,11 +21,6 @@ var allCudaVersions = [
   "11.2"
 ];
 
-var builds = [
-  "Stable",
-  "Nightly"
-];
-
 var platforms = [
   "CUDA",
   "CPU",
@@ -49,12 +44,19 @@ function Index$Variant$Option(Props) {
             });
 }
 
+var builds = [
+  /* Stable */0,
+  /* Nightly */1
+];
+
 function $$default(param) {
   var match = React.useState(function () {
         return {
-                build: "Stable",
-                platform: "CUDA",
-                cudaVersion: "10.2"
+                build: /* Stable */0,
+                platform: {
+                  TAG: /* CUDA */0,
+                  cuda_version: /* CUDA_10_2 */2
+                }
               };
       });
   var setState = match[1];
@@ -67,9 +69,10 @@ function $$default(param) {
                       }, React.createElement(React$1.Tab.Group, {
                             children: React.createElement(React$1.Tab.List, {
                                   children: (function (param) {
-                                      return builds.map(function (category) {
+                                      return builds.map(function (b) {
+                                                  var s = b ? "Nightly" : "Stable";
                                                   return React.createElement(Index$Variant$Option, {
-                                                              name: category
+                                                              name: s
                                                             });
                                                 });
                                     }),
@@ -79,8 +82,7 @@ function $$default(param) {
                                 return Curry._1(setState, (function (s) {
                                               return {
                                                       build: Caml_array.get(builds, index),
-                                                      platform: s.platform,
-                                                      cudaVersion: s.cudaVersion
+                                                      platform: s.platform
                                                     };
                                             }));
                               })
@@ -124,20 +126,9 @@ function $$default(param) {
                                                               }),
                                                             children: (function (param) {
                                                                 var match = state.build;
-                                                                var tmp;
-                                                                switch (match) {
-                                                                  case "Nightly" :
-                                                                      tmp = "https://staging.oneflow.info/branch/master/cu101";
-                                                                      break;
-                                                                  case "Stable" :
-                                                                      tmp = "https://release.oneflow.info";
-                                                                      break;
-                                                                  default:
-                                                                    tmp = "[N/A]";
-                                                                }
                                                                 return [
                                                                           "python3 -m pip install oneflow -f",
-                                                                          tmp,
+                                                                          match ? "https://staging.oneflow.info/branch/master/cu101" : "https://release.oneflow.info",
                                                                           ""
                                                                         ].join(" ");
                                                               }),
