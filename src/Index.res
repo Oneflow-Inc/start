@@ -2,6 +2,7 @@ module P = {
   @react.component
   let make = (~children) => <p className="mb-2"> children </p>
 }
+
 open HeadlessUI
 
 type category = {
@@ -10,6 +11,17 @@ type category = {
   date: string,
   commentCount: int,
   shareCount: int,
+}
+
+module Hero = {
+  @react.component
+  let make = (~children) =>
+    <div>
+      <div
+        className="relative flex flex-col items-center justify-center mt-8 mb-12 rounded-xl overflow-hidden bg-gradient-to-r from-sky-400 to-blue-600">
+        <div className="w-full h-[360px]"> <div className="w-full h-full"> children </div> </div>
+      </div>
+    </div>
 }
 
 let default = () => {
@@ -74,52 +86,54 @@ let default = () => {
       ),
     ])
   )
-  <div className=`flex flex-col items-center justify-center w-full`>
-    <div className="w-full max-w-md px-2 py-16 sm:px-0">
-      <Tab.Group>
-        <Tab.List className="flex p-1 space-x-1 bg-blue-900/20 rounded-xl">
-          {({selectedIndex}) =>
-            Js.Dict.keys(categories)
-            |> Js.Array.map((category: string) =>
-              <Tab
-                key={category}
-                className={({selected}) =>
-                  Js.Array.joinWith(
-                    " ",
-                    [
-                      `w-full py-2.5 text-sm leading-5 font-medium text-blue-700 rounded-lg`,
-                      `focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60`,
-                      selected
-                        ? `bg-white shadow`
-                        : `text-blue-100 hover:bg-white/[0.12] hover:text-white`,
-                    ],
-                  )}>
-                {({selected}) => React.string(category)}
-              </Tab>
-            )
-            |> React.array}
-        </Tab.List>
-        <Tab.Panels className="mt-2">
-          {_ =>
-            categories
-            |> Js.Dict.values
-            |> Js.Array.mapi((posts, idx) =>
-              <Tab.Panel
-                key={string_of_int(idx)}
-                className={_ =>
-                  Js.Array.joinWith(
-                    " ",
-                    [
-                      `bg-white rounded-xl p-3`,
-                      `focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60`,
-                    ],
-                  )}>
-                {_ => React.string(posts[0].title)}
-              </Tab.Panel>
-            )
-            |> React.array}
-        </Tab.Panels>
-      </Tab.Group>
+  <Hero>
+    <div className=`flex flex-col items-center justify-center w-full`>
+      <div className="w-full max-w-md px-2 py-16 sm:px-0">
+        <Tab.Group>
+          <Tab.List className="flex p-1 space-x-1 bg-blue-900/20 rounded-xl">
+            {({selectedIndex}) =>
+              Js.Dict.keys(categories)
+              |> Js.Array.map((category: string) =>
+                <Tab
+                  key={category}
+                  className={({selected}) =>
+                    Js.Array.joinWith(
+                      " ",
+                      [
+                        `w-full py-2.5 text-sm leading-5 font-medium text-blue-700 rounded-lg`,
+                        `focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60`,
+                        selected
+                          ? `bg-white shadow`
+                          : `text-blue-100 hover:bg-white/[0.12] hover:text-white`,
+                      ],
+                    )}>
+                  {({selected}) => React.string(category)}
+                </Tab>
+              )
+              |> React.array}
+          </Tab.List>
+          <Tab.Panels className="mt-2">
+            {_ =>
+              categories
+              |> Js.Dict.values
+              |> Js.Array.mapi((posts, idx) =>
+                <Tab.Panel
+                  key={string_of_int(idx)}
+                  className={_ =>
+                    Js.Array.joinWith(
+                      " ",
+                      [
+                        `bg-white rounded-xl p-3`,
+                        `focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60`,
+                      ],
+                    )}>
+                  {_ => React.string(posts[0].title)}
+                </Tab.Panel>
+              )
+              |> React.array}
+          </Tab.Panels>
+        </Tab.Group>
+      </div>
     </div>
-  </div>
+  </Hero>
 }
