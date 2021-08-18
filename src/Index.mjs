@@ -14,11 +14,14 @@ function Index$Hero(Props) {
 
 function Index$Variant$Option(Props) {
   var name = Props.name;
+  var hiddenOpt = Props.hidden;
+  var hidden = hiddenOpt !== undefined ? hiddenOpt : false;
   return React.createElement(React$1.Tab, {
               className: (function (param) {
                   return [
                             "w-full py-2.5 text-sm leading-5 font-medium rounded-lg",
                             "focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60",
+                            hidden ? "hidden" : "",
                             param.selected ? "bg-white shadow text-blue-700 text-opacity-80" : "text-blue-100 hover:bg-white hover:bg-opacity-10 hover:text-white"
                           ].join(" ");
                 }),
@@ -188,17 +191,7 @@ function $$default(param) {
       return xlaCudaVersions.indexOf("10.1");
     }
   };
-  var availableCudaVersions = function (state) {
-    var match = state.selected.platform;
-    if (typeof match === "number") {
-      return ;
-    } else if (match.TAG === /* CUDA */0) {
-      return cudaVersions;
-    } else {
-      return xlaCudaVersions;
-    }
-  };
-  var versions = availableCudaVersions(state);
+  var match$1 = state.selected.platform;
   return React.createElement(Index$Hero, {
               children: React.createElement("div", {
                     className: "rounded-xl overflow-hidden bg-gradient-to-r from-sky-400 to-blue-600 flex flex-col items-center justify-center w-full"
@@ -240,25 +233,22 @@ function $$default(param) {
                               })
                           }), React.createElement(React$1.Tab.Group, {
                             children: [
-                              versions !== undefined ? React.createElement(React$1.Tab.List, {
-                                      children: (function (param) {
-                                          return versions.map(function (v) {
-                                                      return React.createElement(Index$Variant$Option, {
-                                                                  name: v
-                                                                });
-                                                    });
-                                        }),
-                                      className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
-                                    }) : React.createElement(React$1.Tab.List, {
-                                      children: (function (param) {
-                                          return ["X86"].map(function (v) {
-                                                      return React.createElement(Index$Variant$Option, {
-                                                                  name: v
-                                                                });
-                                                    });
-                                        }),
-                                      className: "hidden"
-                                    }),
+                              React.createElement(React$1.Tab.List, {
+                                    children: (function (param) {
+                                        return cudaVersions.map(function (v) {
+                                                    var match = state.selected.platform;
+                                                    var tmp;
+                                                    tmp = typeof match === "number" || match.TAG === /* CUDA */0 || v !== "11.2" ? false : true;
+                                                    return React.createElement(Index$Variant$Option, {
+                                                                name: v,
+                                                                hidden: tmp
+                                                              });
+                                                  });
+                                      }),
+                                    className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl" + (
+                                      typeof match$1 === "number" ? " hidden" : ""
+                                    )
+                                  }),
                               React.createElement(React$1.Tab.Panels, {
                                     children: (function (param) {
                                         return cudaVersions.map(function (v, param) {
