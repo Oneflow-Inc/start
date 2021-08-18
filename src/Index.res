@@ -136,12 +136,7 @@ let default = () => {
           </Tab.List>
         </Tab.Group>
         <Tab.Group
-          defaultIndex={
-            let index = defaultIndexOfCudaVersion(state)
-
-            // Js.log2("index", index)
-            index
-          }
+          defaultIndex={defaultIndexOfCudaVersion(state)}
           onChange={index => dispatch(SelectCudaVersion(cudaVersions[index]))}>
           {switch availableCudaVersions(state) {
           | Some(versions) =>
