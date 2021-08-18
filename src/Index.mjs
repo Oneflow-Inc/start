@@ -191,6 +191,16 @@ function $$default(param) {
       return xlaCudaVersions.indexOf("10.1");
     }
   };
+  var availableCudaVersions = function (state) {
+    var match = state.selected.platform;
+    if (typeof match === "number") {
+      return [];
+    } else if (match.TAG === /* CUDA */0) {
+      return cudaVersions;
+    } else {
+      return xlaCudaVersions;
+    }
+  };
   var match$1 = state.selected.platform;
   return React.createElement(Index$Hero, {
               children: React.createElement("div", {
@@ -241,7 +251,8 @@ function $$default(param) {
                                             _0: Caml_array.get(cudaVersions, index)
                                           });
                               }),
-                            defaultIndex: defaultIndexOfCudaVersion(state)
+                            defaultIndex: defaultIndexOfCudaVersion(state),
+                            key: String(availableCudaVersions(state).length)
                           }, React.createElement(React$1.Tab.List, {
                                 children: (function (param) {
                                     return cudaVersions.map(function (v) {
@@ -257,7 +268,8 @@ function $$default(param) {
                                   }),
                                 className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl" + (
                                   typeof match$1 === "number" ? " hidden" : ""
-                                )
+                                ),
+                                key: String(availableCudaVersions(state).length)
                               }), React.createElement(React$1.Tab.Panels, {
                                 children: (function (param) {
                                     return cudaVersions.map(function (v, param) {

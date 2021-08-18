@@ -127,9 +127,9 @@ let default = () => {
     }
   let availableCudaVersions = (state: state) =>
     switch state.selected.platform {
-    | Variant.CUDA(_) => Some(cudaVersions)
-    | Variant.CUDA_XLA(_) => Some(xlaCudaVersions)
-    | Variant.CPU => None
+    | Variant.CUDA(_) => cudaVersions
+    | Variant.CUDA_XLA(_) => xlaCudaVersions
+    | Variant.CPU => []
     }
   <Hero>
     <div
@@ -156,9 +156,11 @@ let default = () => {
           </Tab.List>
         </Tab.Group>
         <Tab.Group
+          key={availableCudaVersions(state) |> Js.Array.length |> string_of_int}
           defaultIndex={defaultIndexOfCudaVersion(state)}
           onChange={index => dispatch(SelectCudaVersion(cudaVersions[index]))}>
           <Tab.List
+            key={availableCudaVersions(state) |> Js.Array.length |> string_of_int}
             className={"my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl" ++
             switch state.selected.platform {
             | Variant.CPU => " hidden"
