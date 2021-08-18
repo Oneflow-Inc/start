@@ -39,6 +39,31 @@ function platformPlusName(p) {
   }
 }
 
+function Index$Pip$Panel(Props) {
+  var cmd = Props.cmd;
+  return React.createElement(React$1.Tab.Panel, {
+              className: (function (param) {
+                  return [
+                            "bg-white rounded-xl p-3",
+                            "focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60"
+                          ].join(" ");
+                }),
+              children: (function (param) {
+                  return cmd;
+                }),
+              key: cmd
+            });
+}
+
+function pipInstallCommnad(selected) {
+  var match = selected.build;
+  return [
+            "python3 -m pip install oneflow -f",
+            match ? "https://staging.oneflow.info/branch/master/" + platformPlusName(selected.platform) : "https://release.oneflow.info oneflow==0.4.0+" + platformPlusName(selected.platform),
+            ""
+          ].join(" ");
+}
+
 function reducer(state, action) {
   switch (action.TAG | 0) {
     case /* SelectBuild */0 :
@@ -213,16 +238,17 @@ function $$default(param) {
                                             _0: Caml_array.get(platforms, index)
                                           });
                               })
-                          }), React.createElement(React$1.Tab.Group, {
-                            children: null,
-                            onChange: (function (index) {
-                                return Curry._1(dispatch, {
-                                            TAG: /* SelectCudaVersion */2,
-                                            _0: Caml_array.get(cudaVersions, index)
-                                          });
-                              }),
-                            defaultIndex: defaultIndexOfCudaVersion(state)
-                          }, versions !== undefined ? React.createElement(React$1.Tab.List, {
+                          }), versions !== undefined ? React.createElement(React$1.Tab.Group, {
+                              children: null,
+                              onChange: (function (index) {
+                                  return Curry._1(dispatch, {
+                                              TAG: /* SelectCudaVersion */2,
+                                              _0: Caml_array.get(versions, index)
+                                            });
+                                }),
+                              defaultIndex: defaultIndexOfCudaVersion(state),
+                              key: String(versions.length)
+                            }, React.createElement(React$1.Tab.List, {
                                   children: (function (param) {
                                       return versions.map(function (v) {
                                                   return React.createElement(Index$Variant$Option, {
@@ -230,33 +256,30 @@ function $$default(param) {
                                                             });
                                                 });
                                     }),
-                                  className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl",
-                                  key: String(versions.length)
-                                }) : React.createElement("div", undefined), React.createElement(React$1.Tab.Panels, {
-                                children: (function (param) {
-                                    return cudaVersions.map(function (v, param) {
-                                                return React.createElement(React$1.Tab.Panel, {
-                                                            className: (function (param) {
-                                                                return [
-                                                                          "bg-white rounded-xl p-3",
-                                                                          "focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60"
-                                                                        ].join(" ");
-                                                              }),
-                                                            children: (function (param) {
-                                                                var selected = state.selected;
-                                                                var match = selected.build;
-                                                                return [
-                                                                          "python3 -m pip install oneflow -f",
-                                                                          match ? "https://staging.oneflow.info/branch/master/" + platformPlusName(selected.platform) : "https://release.oneflow.info oneflow==0.4.0+" + platformPlusName(selected.platform),
-                                                                          ""
-                                                                        ].join(" ");
-                                                              }),
-                                                            key: v
-                                                          });
-                                              });
+                                  className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
+                                }), React.createElement(React$1.Tab.Panels, {
+                                  children: (function (param) {
+                                      return versions.map(function (v, param) {
+                                                  return React.createElement(Index$Pip$Panel, {
+                                                              cmd: pipInstallCommnad(state.selected)
+                                                            });
+                                                });
+                                    }),
+                                  className: "mt-2"
+                                })) : React.createElement(React$1.Tab.Group, {
+                              children: React.createElement(React$1.Tab.Panels, {
+                                    children: (function (param) {
+                                        return ["placeholder"].map(function (v, param) {
+                                                    return React.createElement(Index$Pip$Panel, {
+                                                                cmd: pipInstallCommnad(state.selected)
+                                                              });
+                                                  });
+                                      }),
+                                    className: "mt-2"
                                   }),
-                                className: "mt-2"
-                              }))))
+                              defaultIndex: defaultIndexOfCudaVersion(state),
+                              key: "CPU"
+                            })))
             });
 }
 

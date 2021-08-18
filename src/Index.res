@@ -38,6 +38,25 @@ let platformPlusName = (p: Variant.platform) => {
   }
 }
 
+module Pip = {
+  module Panel = {
+    @react.component
+    let make = (~cmd) =>
+      <Tab.Panel
+        key=cmd
+        className={_ =>
+          Js.Array.joinWith(
+            " ",
+            [
+              `bg-white rounded-xl p-3`,
+              `focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60`,
+            ],
+          )}>
+        {_ => React.string(cmd)}
+      </Tab.Panel>
+  }
+}
+
 let pipInstallCommnad = (selected: Variant.t) => {
   Js.Array.joinWith(
     " ",
@@ -135,16 +154,15 @@ let default = () => {
               |> React.array}
           </Tab.List>
         </Tab.Group>
-        <Tab.Group
-          defaultIndex={defaultIndexOfCudaVersion(state)}
-          onChange={index => dispatch(SelectCudaVersion(cudaVersions[index]))}>
-          {
-            let versions = availableCudaVersions(state)
-            switch versions {
-            | Some(versions) =>
-              <Tab.List
-                key={Js.Array.length(versions) |> string_of_int}
-                className="my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
+        {
+          let versions = availableCudaVersions(state)
+          switch versions {
+          | Some(versions) =>
+            <Tab.Group
+              key={Js.Array.length(versions) |> string_of_int}
+              defaultIndex={defaultIndexOfCudaVersion(state)}
+              onChange={index => dispatch(SelectCudaVersion(versions[index]))}>
+              <Tab.List className="my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
                 {_ =>
                   versions
                   |> Js.Array.map(v => {
@@ -152,29 +170,24 @@ let default = () => {
                   })
                   |> React.array}
               </Tab.List>
-            | None => <div />
-            }
+              <Tab.Panels className="mt-2">
+                {_ =>
+                  versions
+                  |> Js.Array.mapi((v, _) => <Pip.Panel cmd={pipInstallCommnad(state.selected)} />)
+                  |> React.array}
+              </Tab.Panels>
+            </Tab.Group>
+          | None =>
+            <Tab.Group key="CPU" defaultIndex={defaultIndexOfCudaVersion(state)}>
+              <Tab.Panels className="mt-2">
+                {_ =>
+                  ["placeholder"]
+                  |> Js.Array.mapi((v, _) => <Pip.Panel cmd={pipInstallCommnad(state.selected)} />)
+                  |> React.array}
+              </Tab.Panels>
+            </Tab.Group>
           }
-          <Tab.Panels className="mt-2">
-            {_ =>
-              cudaVersions
-              |> Js.Array.mapi((v, _) =>
-                <Tab.Panel
-                  key=v
-                  className={_ =>
-                    Js.Array.joinWith(
-                      " ",
-                      [
-                        `bg-white rounded-xl p-3`,
-                        `focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60`,
-                      ],
-                    )}>
-                  {_ => React.string(pipInstallCommnad(state.selected))}
-                </Tab.Panel>
-              )
-              |> React.array}
-          </Tab.Panels>
-        </Tab.Group>
+        }
       </div>
     </div>
   </Hero>
