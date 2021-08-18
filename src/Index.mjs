@@ -238,57 +238,46 @@ function $$default(param) {
                                             _0: Caml_array.get(platforms, index)
                                           });
                               })
-                          }), versions !== undefined ? React.createElement(React$1.Tab.Group, {
-                              children: null,
-                              onChange: (function (index) {
-                                  return Curry._1(dispatch, {
-                                              TAG: /* SelectCudaVersion */2,
-                                              _0: Caml_array.get(versions, index)
-                                            });
-                                }),
-                              defaultIndex: defaultIndexOfCudaVersion(state),
-                              key: String(versions.length)
-                            }, React.createElement(React$1.Tab.List, {
-                                  children: (function (param) {
-                                      return versions.map(function (v) {
-                                                  return React.createElement(Index$Variant$Option, {
-                                                              name: v
-                                                            });
-                                                });
+                          }), React.createElement(React$1.Tab.Group, {
+                            children: [
+                              versions !== undefined ? React.createElement(React$1.Tab.List, {
+                                      children: (function (param) {
+                                          return versions.map(function (v) {
+                                                      return React.createElement(Index$Variant$Option, {
+                                                                  name: v
+                                                                });
+                                                    });
+                                        }),
+                                      className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
+                                    }) : React.createElement(React$1.Tab.List, {
+                                      children: (function (param) {
+                                          return ["X86"].map(function (v) {
+                                                      return React.createElement(Index$Variant$Option, {
+                                                                  name: v
+                                                                });
+                                                    });
+                                        }),
+                                      className: "hidden"
                                     }),
-                                  className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
-                                }), React.createElement(React$1.Tab.Panels, {
-                                  children: (function (param) {
-                                      return versions.map(function (v, param) {
-                                                  return React.createElement(Index$Pip$Panel, {
-                                                              cmd: pipInstallCommnad(state.selected)
-                                                            });
-                                                });
-                                    }),
-                                  className: "mt-2"
-                                })) : React.createElement(React$1.Tab.Group, {
-                              children: null,
-                              defaultIndex: defaultIndexOfCudaVersion(state),
-                              key: "CPU"
-                            }, React.createElement(React$1.Tab.List, {
-                                  children: (function (param) {
-                                      return ["X86"].map(function (v) {
-                                                  return React.createElement(Index$Variant$Option, {
-                                                              name: v
-                                                            });
-                                                });
-                                    }),
-                                  className: "hidden"
-                                }), React.createElement(React$1.Tab.Panels, {
-                                  children: (function (param) {
-                                      return ["placeholder"].map(function (v, param) {
-                                                  return React.createElement(Index$Pip$Panel, {
-                                                              cmd: pipInstallCommnad(state.selected)
-                                                            });
-                                                });
-                                    }),
-                                  className: "mt-2"
-                                }))))
+                              React.createElement(React$1.Tab.Panels, {
+                                    children: (function (param) {
+                                        return cudaVersions.map(function (v, param) {
+                                                    return React.createElement(Index$Pip$Panel, {
+                                                                cmd: pipInstallCommnad(state.selected)
+                                                              });
+                                                  });
+                                      }),
+                                    className: "mt-2"
+                                  })
+                            ],
+                            onChange: (function (index) {
+                                return Curry._1(dispatch, {
+                                            TAG: /* SelectCudaVersion */2,
+                                            _0: Caml_array.get(cudaVersions, index)
+                                          });
+                              }),
+                            defaultIndex: defaultIndexOfCudaVersion(state)
+                          })))
             });
 }
 

@@ -154,48 +154,41 @@ let default = () => {
               |> React.array}
           </Tab.List>
         </Tab.Group>
-        {
-          let versions = availableCudaVersions(state)
-          switch versions {
-          | Some(versions) =>
-            <Tab.Group
-              key={Js.Array.length(versions) |> string_of_int}
-              defaultIndex={defaultIndexOfCudaVersion(state)}
-              onChange={index => dispatch(SelectCudaVersion(versions[index]))}>
-              <Tab.List className="my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
-                {_ =>
-                  versions
-                  |> Js.Array.map(v => {
-                    <Variant.Option name=v />
-                  })
-                  |> React.array}
-              </Tab.List>
+        <Tab.Group
+          defaultIndex={defaultIndexOfCudaVersion(state)}
+          onChange={index => dispatch(SelectCudaVersion(cudaVersions[index]))}>
+          {
+            let versions = availableCudaVersions(state)
+            [
+              switch versions {
+              | Some(versions) =>
+                <Tab.List className="my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
+                  {_ =>
+                    versions
+                    |> Js.Array.map(v => {
+                      <Variant.Option name=v />
+                    })
+                    |> React.array}
+                </Tab.List>
+              | None =>
+                <Tab.List className="hidden">
+                  {_ =>
+                    ["X86"]
+                    |> Js.Array.map(v => {
+                      <Variant.Option name=v />
+                    })
+                    |> React.array}
+                </Tab.List>
+              },
               <Tab.Panels className="mt-2">
                 {_ =>
-                  versions
+                  cudaVersions
                   |> Js.Array.mapi((v, _) => <Pip.Panel cmd={pipInstallCommnad(state.selected)} />)
                   |> React.array}
-              </Tab.Panels>
-            </Tab.Group>
-          | None =>
-            <Tab.Group key="CPU" defaultIndex={defaultIndexOfCudaVersion(state)}>
-              <Tab.List className="hidden">
-                {_ =>
-                  ["X86"]
-                  |> Js.Array.map(v => {
-                    <Variant.Option name=v />
-                  })
-                  |> React.array}
-              </Tab.List>
-              <Tab.Panels className="mt-2">
-                {_ =>
-                  ["placeholder"]
-                  |> Js.Array.mapi((v, _) => <Pip.Panel cmd={pipInstallCommnad(state.selected)} />)
-                  |> React.array}
-              </Tab.Panels>
-            </Tab.Group>
+              </Tab.Panels>,
+            ] |> React.array
           }
-        }
+        </Tab.Group>
       </div>
     </div>
   </Hero>
