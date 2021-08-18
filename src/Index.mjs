@@ -12,12 +12,6 @@ function Index$Hero(Props) {
                 }, children));
 }
 
-var platforms = [
-  "CUDA",
-  "CPU",
-  "CUDA-XLA"
-];
-
 function Index$Variant$Option(Props) {
   var name = Props.name;
   return React.createElement(React$1.Tab, {
@@ -38,6 +32,18 @@ function Index$Variant$Option(Props) {
 var builds = [
   /* Stable */0,
   /* Nightly */1
+];
+
+var defaultPlatforms = [
+  {
+    TAG: /* CUDA */0,
+    _0: "10.2"
+  },
+  /* CPU */0,
+  {
+    TAG: /* CUDA_XLA */1,
+    _0: "10.1"
+  }
 ];
 
 function $$default(param) {
@@ -75,52 +81,19 @@ function $$default(param) {
             ];
     }
   };
-  var updatePlatfrom = function (currentPlatform, displayName) {
-    switch (displayName) {
-      case "CPU" :
-          return /* CPU */0;
-      case "CUDA" :
-          if (typeof currentPlatform === "number" || currentPlatform.TAG === /* CUDA */0) {
-            return {
-                    TAG: /* CUDA */0,
-                    _0: "10.2"
-                  };
-          } else {
-            return {
-                    TAG: /* CUDA */0,
-                    _0: currentPlatform._0
-                  };
-          }
-      case "CUDA-XLA" :
-          if (typeof currentPlatform === "number") {
-            return {
-                    TAG: /* CUDA_XLA */1,
-                    _0: "10.1"
-                  };
-          }
-          if (currentPlatform.TAG !== /* CUDA */0) {
-            return {
-                    TAG: /* CUDA_XLA */1,
-                    _0: "10.1"
-                  };
-          }
-          var ver = currentPlatform._0;
-          if (ver === "11.2") {
-            return {
-                    TAG: /* CUDA_XLA */1,
-                    _0: "10.1"
-                  };
-          } else {
-            return {
-                    TAG: /* CUDA_XLA */1,
-                    _0: ver
-                  };
-          }
-      default:
-        return {
-                TAG: /* CUDA */0,
-                _0: "10.2"
-              };
+  var updatePlatfrom = function (currentPlatform, cudaVersionStr) {
+    if (typeof currentPlatform === "number") {
+      return /* CPU */0;
+    } else if (currentPlatform.TAG === /* CUDA */0) {
+      return {
+              TAG: /* CUDA */0,
+              _0: cudaVersionStr
+            };
+    } else {
+      return {
+              TAG: /* CUDA_XLA */1,
+              _0: cudaVersionStr
+            };
     }
   };
   return React.createElement(Index$Hero, {
@@ -151,9 +124,13 @@ function $$default(param) {
                           }), React.createElement(React$1.Tab.Group, {
                             children: React.createElement(React$1.Tab.List, {
                                   children: (function (param) {
-                                      return platforms.map(function (category) {
+                                      return defaultPlatforms.map(function (p) {
+                                                  var platformStr;
+                                                  platformStr = typeof p === "number" ? "CPU" : (
+                                                      p.TAG === /* CUDA */0 ? "CUDA" : "XLA"
+                                                    );
                                                   return React.createElement(Index$Variant$Option, {
-                                                              name: category
+                                                              name: platformStr
                                                             });
                                                 });
                                     }),
@@ -163,12 +140,20 @@ function $$default(param) {
                                 return Curry._1(setState, (function (s) {
                                               return {
                                                       build: s.build,
-                                                      platform: updatePlatfrom(s.platform, Caml_array.get(platforms, index))
+                                                      platform: Caml_array.get(defaultPlatforms, index)
                                                     };
                                             }));
                               })
                           }), React.createElement(React$1.Tab.Group, {
-                            children: null
+                            children: null,
+                            onChange: (function (index) {
+                                return Curry._1(setState, (function (s) {
+                                              return {
+                                                      build: s.build,
+                                                      platform: updatePlatfrom(s.platform, Caml_array.get(availableCUDAVersions(state), index))
+                                                    };
+                                            }));
+                              })
                           }, React.createElement(React$1.Tab.List, {
                                 children: (function (param) {
                                     return availableCUDAVersions(state).map(function (category) {

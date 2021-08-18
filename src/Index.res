@@ -13,7 +13,6 @@ module Hero = {
 let allCudaVersions = [`10.0`, `10.1`, `10.2`, `11.0`, `11.1`, `11.2`]
 let xlaCudaVersions = [`10.0`, `10.1`, `10.2`, `11.0`, `11.1`]
 
-let platforms = [`CUDA`, `CPU`, `CUDA-XLA`]
 module Variant = {
   type build = Stable | Nightly
   type platform = CUDA(string) | CPU | CUDA_XLA(string)
@@ -40,6 +39,7 @@ module Variant = {
   }
 }
 let builds = [Variant.Stable, Variant.Nightly]
+let defaultPlatforms = [Variant.CUDA("10.2"), Variant.CPU, Variant.CUDA_XLA("10.1")]
 let pipInstallCommnad = (selected: Variant.t) => {
   Js.Array.joinWith(
     " ",
@@ -79,21 +79,11 @@ let default = () => {
     | Variant.CUDA_XLA(_) => ["10.0", "10.1", "10.2", "11.0", "11.1"]
     | Variant.CPU => []
     }
-  let updatePlatfrom = (currentPlatform: Variant.platform, displayName: string) =>
-    switch displayName {
-    | "CUDA" =>
-      switch currentPlatform {
-      | Variant.CUDA_XLA(ver) => Variant.CUDA(ver)
-      | _ => Variant.CUDA("10.2")
-      }
-    | "CUDA-XLA" =>
-      switch currentPlatform {
-      | Variant.CUDA(`11.2`) => Variant.CUDA_XLA("10.1")
-      | Variant.CUDA(ver) => Variant.CUDA_XLA(ver)
-      | _ => Variant.CUDA_XLA("10.1")
-      }
-    | "CPU" => Variant.CPU
-    | _ => Variant.CUDA("10.2")
+  let updatePlatfrom = (currentPlatform: Variant.platform, cudaVersionStr: string) =>
+    switch currentPlatform {
+    | Variant.CUDA(_) => Variant.CUDA(cudaVersionStr)
+    | Variant.CUDA_XLA(_) => Variant.CUDA_XLA(cudaVersionStr)
+    | _ => Variant.CPU
     }
 
   <Hero>
@@ -114,17 +104,27 @@ let default = () => {
               |> React.array}
           </Tab.List>
         </Tab.Group>
-        <Tab.Group
-          onChange={index =>
-            setState(s => {...s, platform: updatePlatfrom(s.platform, platforms[index])})}>
+        <Tab.Group onChange={index => setState(s => {...s, platform: defaultPlatforms[index]})}>
           <Tab.List className="my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
             {({selectedIndex}) =>
-              platforms
-              |> Js.Array.map((category: string) => <Variant.Option name=category />)
+              defaultPlatforms
+              |> Js.Array.map(p => {
+                let platformStr = switch p {
+                | Variant.CUDA(_) => "CUDA"
+                | Variant.CUDA_XLA(_) => "XLA"
+                | Variant.CPU => "CPU"
+                }
+                <Variant.Option name=platformStr />
+              })
               |> React.array}
           </Tab.List>
         </Tab.Group>
-        <Tab.Group>
+        <Tab.Group
+          onChange={index =>
+            setState(s => {
+              ...s,
+              platform: updatePlatfrom(s.platform, availableCUDAVersions(state)[index]),
+            })}>
           <Tab.List className="flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
             {({selectedIndex}) =>
               availableCUDAVersions(state)
