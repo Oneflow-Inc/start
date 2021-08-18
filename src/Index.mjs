@@ -95,43 +95,41 @@ function $$default(param) {
                                   className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
                                 })
                           }), React.createElement(React$1.Tab.Group, {
-                            children: React.createElement(React$1.Tab.List, {
-                                  children: (function (param) {
-                                      return allCudaVersions.map(function (category) {
-                                                  return React.createElement(Index$Variant$Option, {
-                                                              name: category
-                                                            });
-                                                });
-                                    }),
-                                  className: "flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
-                                })
-                          }), React.createElement(React$1.Tab.Group, {
-                            children: React.createElement(React$1.Tab.Panels, {
-                                  children: (function (param) {
-                                      return [
-                                                1,
-                                                2,
-                                                3,
-                                                4,
-                                                5
-                                              ].map(function (posts, idx) {
-                                                  return React.createElement(React$1.Tab.Panel, {
-                                                              className: (function (param) {
-                                                                  return [
-                                                                            "bg-white rounded-xl p-3",
-                                                                            "focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60"
-                                                                          ].join(" ");
-                                                                }),
-                                                              children: (function (param) {
-                                                                  return "python3 -m pip install -f https://release.oneflow.info oneflow==0.4.0+cu102";
-                                                                }),
-                                                              key: String(idx)
-                                                            });
-                                                });
-                                    }),
-                                  className: "mt-2"
-                                })
-                          })))
+                            children: null
+                          }, React.createElement(React$1.Tab.List, {
+                                children: (function (param) {
+                                    return allCudaVersions.map(function (category) {
+                                                return React.createElement(Index$Variant$Option, {
+                                                            name: category
+                                                          });
+                                              });
+                                  }),
+                                className: "flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
+                              }), React.createElement(React$1.Tab.Panels, {
+                                children: (function (param) {
+                                    return [
+                                              1,
+                                              2,
+                                              3,
+                                              4,
+                                              5
+                                            ].map(function (posts, idx) {
+                                                return React.createElement(React$1.Tab.Panel, {
+                                                            className: (function (param) {
+                                                                return [
+                                                                          "bg-white rounded-xl p-3",
+                                                                          "focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60"
+                                                                        ].join(" ");
+                                                              }),
+                                                            children: (function (param) {
+                                                                return "python3 -m pip install -f https://release.oneflow.info oneflow==0.4.0+cu102";
+                                                              }),
+                                                            key: String(idx)
+                                                          });
+                                              });
+                                  }),
+                                className: "mt-2"
+                              }))))
             });
 }
 

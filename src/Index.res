@@ -82,8 +82,6 @@ let default = () => {
               |> Js.Array.map((category: string) => <Variant.Option name=category />)
               |> React.array}
           </Tab.List>
-        </Tab.Group>
-        <Tab.Group>
           <Tab.Panels className="mt-2">
             {_ =>
               [1, 2, 3, 4, 5]
