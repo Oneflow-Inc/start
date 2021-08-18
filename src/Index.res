@@ -179,9 +179,9 @@ let default = () => {
             </Tab.Group>
           | None =>
             <Tab.Group key="CPU" defaultIndex={defaultIndexOfCudaVersion(state)}>
-              <Tab.List className="my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
+              <Tab.List className="hidden">
                 {_ =>
-                  ["placeholder"]
+                  ["X86"]
                   |> Js.Array.map(v => {
                     <Variant.Option name=v />
                   })

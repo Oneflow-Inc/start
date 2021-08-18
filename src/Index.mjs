@@ -272,13 +272,13 @@ function $$default(param) {
                               key: "CPU"
                             }, React.createElement(React$1.Tab.List, {
                                   children: (function (param) {
-                                      return ["placeholder"].map(function (v) {
+                                      return ["X86"].map(function (v) {
                                                   return React.createElement(Index$Variant$Option, {
                                                               name: v
                                                             });
                                                 });
                                     }),
-                                  className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
+                                  className: "hidden"
                                 }), React.createElement(React$1.Tab.Panels, {
                                   children: (function (param) {
                                       return ["placeholder"].map(function (v, param) {
