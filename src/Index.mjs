@@ -180,7 +180,7 @@ function $$default(param) {
                                                                   var ver = state.platform;
                                                                   var tmp$1;
                                                                   tmp$1 = typeof ver === "number" ? "cpu" : (
-                                                                      ver.TAG === /* CUDA */0 ? "cu" + ver._0.replace(".", "") : "cu" + "".replace(ver._0, ".") + ".xla"
+                                                                      ver.TAG === /* CUDA */0 ? "cu" + ver._0.replace(".", "") : "cu" + ver._0.replace(".", "") + ".xla"
                                                                     );
                                                                   tmp = [
                                                                       "https://staging.oneflow.info/branch/master/",

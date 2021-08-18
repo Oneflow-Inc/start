@@ -54,7 +54,7 @@ let pipInstallCommnad = (selected: Variant.t) => {
             "https://staging.oneflow.info/branch/master/",
             switch selected.platform {
             | Variant.CUDA(ver) => "cu" ++ Js.String.replace(".", "", ver)
-            | Variant.CUDA_XLA(ver) => "cu" ++ Js.String.replace(ver, ".", "") ++ ".xla"
+            | Variant.CUDA_XLA(ver) => "cu" ++ Js.String.replace(".", "", ver) ++ ".xla"
             | Variant.CPU => "cpu"
             },
           ],
