@@ -29,6 +29,16 @@ function Index$Variant$Option(Props) {
             });
 }
 
+function platformPlusName(p) {
+  if (typeof p === "number") {
+    return "cpu";
+  } else if (p.TAG === /* CUDA */0) {
+    return "cu" + p._0.replace(".", "");
+  } else {
+    return "cu" + p._0.replace(".", "") + ".xla";
+  }
+}
+
 function reducer(state, action) {
   switch (action.TAG | 0) {
     case /* SelectBuild */0 :
@@ -223,7 +233,7 @@ function $$default(param) {
                                   className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
                                 }) : React.createElement("div", undefined), React.createElement(React$1.Tab.Panels, {
                                 children: (function (param) {
-                                    return cudaVersions.map(function (v, idx) {
+                                    return cudaVersions.map(function (v, param) {
                                                 return React.createElement(React$1.Tab.Panel, {
                                                             className: (function (param) {
                                                                 return [
@@ -233,16 +243,6 @@ function $$default(param) {
                                                               }),
                                                             children: (function (param) {
                                                                 var selected = state.selected;
-                                                                var platformPlusName = function (p) {
-                                                                  var ver = selected.platform;
-                                                                  if (typeof ver === "number") {
-                                                                    return "cpu";
-                                                                  } else if (ver.TAG === /* CUDA */0) {
-                                                                    return "cu" + ver._0.replace(".", "");
-                                                                  } else {
-                                                                    return "cu" + ver._0.replace(".", "") + ".xla";
-                                                                  }
-                                                                };
                                                                 var match = selected.build;
                                                                 return [
                                                                           "python3 -m pip install oneflow -f",

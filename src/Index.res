@@ -1,8 +1,3 @@
-module P = {
-  @react.component
-  let make = (~children) => <p className="mb-2"> children </p>
-}
-
 open HeadlessUI
 
 module Hero = {
@@ -31,19 +26,19 @@ module Variant = {
                 : `text-blue-100 hover:bg-white hover:bg-opacity-10 hover:text-white`,
             ],
           )}>
-        {({selected}) => React.string(name)}
+        {_ => React.string(name)}
       </Tab>
+  }
+}
+let platformPlusName = (p: Variant.platform) => {
+  switch p {
+  | Variant.CUDA(ver) => "cu" ++ Js.String.replace(".", "", ver)
+  | Variant.CUDA_XLA(ver) => "cu" ++ Js.String.replace(".", "", ver) ++ ".xla"
+  | Variant.CPU => "cpu"
   }
 }
 
 let pipInstallCommnad = (selected: Variant.t) => {
-  let platformPlusName = (p: Variant.platform) => {
-    switch selected.platform {
-    | Variant.CUDA(ver) => "cu" ++ Js.String.replace(".", "", ver)
-    | Variant.CUDA_XLA(ver) => "cu" ++ Js.String.replace(".", "", ver) ++ ".xla"
-    | Variant.CPU => "cpu"
-    }
-  }
   Js.Array.joinWith(
     " ",
     [
@@ -122,7 +117,7 @@ let default = () => {
       <div className="w-full max-w-md px-2 py-16 sm:px-0">
         <Tab.Group onChange={index => dispatch(SelectBuild(builds[index]))}>
           <Tab.List className="flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
-            {({selectedIndex}) =>
+            {_ =>
               builds
               |> Js.Array.map(b => {
                 <Variant.Option name=b />
@@ -132,7 +127,7 @@ let default = () => {
         </Tab.Group>
         <Tab.Group onChange={index => dispatch(SelectPlatform(platforms[index]))}>
           <Tab.List className="my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
-            {({selectedIndex}) =>
+            {_ =>
               platforms
               |> Js.Array.map(v => {
                 <Variant.Option name=v />
@@ -158,10 +153,10 @@ let default = () => {
           <Tab.Panels className="mt-2">
             {_ =>
               cudaVersions
-              |> Js.Array.mapi((v, idx) =>
+              |> Js.Array.mapi((v, _) =>
                 <Tab.Panel
                   key=v
-                  className={({selected}) =>
+                  className={_ =>
                     Js.Array.joinWith(
                       " ",
                       [
