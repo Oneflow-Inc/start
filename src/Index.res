@@ -74,8 +74,7 @@ let default = () => {
       ),
     ])
   )
-  <div
-    className="relative flex flex-col items-center justify-center mt-8 mb-12 rounded-xl overflow-hidden bg-gradient-to-r from-sky-400 to-blue-600">
+  <div className=`flex flex-col items-center justify-center w-full`>
     <div className="w-full max-w-md px-2 py-16 sm:px-0">
       <Tab.Group>
         <Tab.List className="flex p-1 space-x-1 bg-blue-900/20 rounded-xl">
