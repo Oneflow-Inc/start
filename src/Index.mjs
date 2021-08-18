@@ -29,71 +29,138 @@ function Index$Variant$Option(Props) {
             });
 }
 
-var builds = [
-  /* Stable */0,
-  /* Nightly */1
-];
-
-var defaultPlatforms = [
-  {
-    TAG: /* CUDA */0,
-    _0: "10.2"
-  },
-  /* CPU */0,
-  {
-    TAG: /* CUDA_XLA */1,
-    _0: "10.1"
-  }
-];
-
-function $$default(param) {
-  var match = React.useState(function () {
+function reducer(state, action) {
+  switch (action.TAG | 0) {
+    case /* SelectBuild */0 :
+        var build;
+        switch (action._0) {
+          case "Nightly" :
+              build = /* Nightly */1;
+              break;
+          case "Stable" :
+              build = /* Stable */0;
+              break;
+          default:
+            build = /* Stable */0;
+        }
+        var init = state.selected;
         return {
-                build: /* Stable */0,
-                platform: {
-                  TAG: /* CUDA */0,
-                  _0: "10.2"
+                selected: {
+                  build: build,
+                  platform: init.platform
                 }
               };
+    case /* SelectPlatform */1 :
+        var platform;
+        switch (action._0) {
+          case "CUDA" :
+              platform = {
+                TAG: /* CUDA */0,
+                _0: "10.2"
+              };
+              break;
+          case "CUDA_XLA" :
+              platform = {
+                TAG: /* CUDA_XLA */1,
+                _0: "10.1"
+              };
+              break;
+          default:
+            platform = /* CPU */0;
+        }
+        var init$1 = state.selected;
+        return {
+                selected: {
+                  build: init$1.build,
+                  platform: platform
+                }
+              };
+    case /* SelectCudaVersion */2 :
+        var v = action._0;
+        var match = state.selected.platform;
+        if (typeof match === "number") {
+          return state;
+        }
+        if (match.TAG === /* CUDA */0) {
+          var init$2 = state.selected;
+          return {
+                  selected: {
+                    build: init$2.build,
+                    platform: {
+                      TAG: /* CUDA */0,
+                      _0: v
+                    }
+                  }
+                };
+        }
+        var init$3 = state.selected;
+        return {
+                selected: {
+                  build: init$3.build,
+                  platform: {
+                    TAG: /* CUDA_XLA */1,
+                    _0: v
+                  }
+                }
+              };
+    
+  }
+}
+
+function $$default(param) {
+  var match = React.useReducer(reducer, {
+        selected: {
+          build: /* Stable */0,
+          platform: {
+            TAG: /* CUDA */0,
+            _0: "10.2"
+          }
+        }
       });
-  var setState = match[1];
+  var dispatch = match[1];
   var state = match[0];
-  var availableCUDAVersions = function (state) {
-    var match = state.platform;
-    if (typeof match === "number") {
-      return [];
-    } else if (match.TAG === /* CUDA */0) {
-      return [
-              "10.0",
-              "10.1",
-              "10.2",
-              "11.0",
-              "11.1",
-              "11.2"
-            ];
+  var builds = [
+    "Stable",
+    "Nightly"
+  ];
+  var platforms = [
+    "CUDA",
+    "CPU",
+    "CUDA_XLA"
+  ];
+  var cudaVersions = [
+    "10.0",
+    "10.1",
+    "10.2",
+    "11.0",
+    "11.1",
+    "11.2"
+  ];
+  var xlaCudaVersions = [
+    "10.0",
+    "10.1",
+    "10.2",
+    "11.0",
+    "11.1"
+  ];
+  var defaultIndexOfCudaVersion = function (state) {
+    var v = state.selected.platform;
+    if (typeof v === "number") {
+      return 0;
+    } else if (v.TAG === /* CUDA */0) {
+      return cudaVersions.indexOf(v._0);
     } else {
-      return [
-              "10.0",
-              "10.1",
-              "10.2",
-              "11.0",
-              "11.1"
-            ];
+      return xlaCudaVersions.indexOf(v._0);
     }
   };
-  var updatePlatfrom = function (currentPlatform, cudaVersionStr) {
-    if (typeof currentPlatform === "number") {
-      return /* CPU */0;
-    } else if (currentPlatform.TAG === /* CUDA */0) {
-      return {
-              TAG: /* CUDA */0,
-              _0: cudaVersionStr
-            };
+  var availableCudaVersions = function (state) {
+    var match = state.selected.platform;
+    if (typeof match === "number") {
+      return ;
+    } else if (match.TAG === /* CUDA */0) {
+      return cudaVersions;
     } else {
-      return {
-              TAG: /* CUDA_XLA */1,
-              _0: cudaVersionStr
-            };
+      return xlaCudaVersions;
     }
   };
   return React.createElement(Index$Hero, {
@@ -105,67 +172,62 @@ function $$default(param) {
                             children: React.createElement(React$1.Tab.List, {
                                   children: (function (param) {
                                       return builds.map(function (b) {
-                                                  var s = b ? "Nightly" : "Stable";
                                                   return React.createElement(Index$Variant$Option, {
-                                                              name: s
+                                                              name: b
                                                             });
                                                 });
                                     }),
                                   className: "flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
                                 }),
                             onChange: (function (index) {
-                                return Curry._1(setState, (function (s) {
-                                              return {
-                                                      build: Caml_array.get(builds, index),
-                                                      platform: s.platform
-                                                    };
-                                            }));
+                                return Curry._1(dispatch, {
+                                            TAG: /* SelectBuild */0,
+                                            _0: Caml_array.get(builds, index)
+                                          });
                               })
                           }), React.createElement(React$1.Tab.Group, {
                             children: React.createElement(React$1.Tab.List, {
                                   children: (function (param) {
-                                      return defaultPlatforms.map(function (p) {
-                                                  var platformStr;
-                                                  platformStr = typeof p === "number" ? "CPU" : (
-                                                      p.TAG === /* CUDA */0 ? "CUDA" : "XLA"
-                                                    );
+                                      return platforms.map(function (v) {
                                                   return React.createElement(Index$Variant$Option, {
-                                                              name: platformStr
+                                                              name: v
                                                             });
                                                 });
                                     }),
                                   className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
                                 }),
                             onChange: (function (index) {
-                                return Curry._1(setState, (function (s) {
-                                              return {
-                                                      build: s.build,
-                                                      platform: Caml_array.get(defaultPlatforms, index)
-                                                    };
-                                            }));
+                                return Curry._1(dispatch, {
+                                            TAG: /* SelectPlatform */1,
+                                            _0: Caml_array.get(platforms, index)
+                                          });
                               })
                           }), React.createElement(React$1.Tab.Group, {
                             children: null,
                             onChange: (function (index) {
-                                return Curry._1(setState, (function (s) {
-                                              return {
-                                                      build: s.build,
-                                                      platform: updatePlatfrom(s.platform, Caml_array.get(availableCUDAVersions(state), index))
-                                                    };
-                                            }));
-                              })
+                                return Curry._1(dispatch, {
+                                            TAG: /* SelectCudaVersion */2,
+                                            _0: Caml_array.get(cudaVersions, index)
+                                          });
+                              }),
+                            defaultIndex: defaultIndexOfCudaVersion(state)
                           }, React.createElement(React$1.Tab.List, {
                                 children: (function (param) {
-                                    return availableCUDAVersions(state).map(function (category) {
-                                                return React.createElement(Index$Variant$Option, {
-                                                            name: category
-                                                          });
-                                              });
+                                    var version = availableCudaVersions(state);
+                                    if (version !== undefined) {
+                                      return version.map(function (v) {
+                                                  return React.createElement(Index$Variant$Option, {
+                                                              name: v
+                                                            });
+                                                });
+                                    } else {
+                                      return React.createElement("div", undefined);
+                                    }
                                   }),
-                                className: "flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
+                                className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
                               }), React.createElement(React$1.Tab.Panels, {
                                 children: (function (param) {
-                                    return availableCUDAVersions(state).map(function (v, idx) {
+                                    return cudaVersions.map(function (v, idx) {
                                                 return React.createElement(React$1.Tab.Panel, {
                                                             className: (function (param) {
                                                                 return [
@@ -174,10 +236,11 @@ function $$default(param) {
                                                                         ].join(" ");
                                                               }),
                                                             children: (function (param) {
-                                                                var match = state.build;
+                                                                var selected = state.selected;
+                                                                var match = selected.build;
                                                                 var tmp;
                                                                 if (match) {
-                                                                  var ver = state.platform;
+                                                                  var ver = selected.platform;
                                                                   var tmp$1;
                                                                   tmp$1 = typeof ver === "number" ? "cpu" : (
                                                                       ver.TAG === /* CUDA */0 ? "cu" + ver._0.replace(".", "") : "cu" + ver._0.replace(".", "") + ".xla"

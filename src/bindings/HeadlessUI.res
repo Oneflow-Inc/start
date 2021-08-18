@@ -100,6 +100,7 @@ module Tab = {
       ~static: bool=?,
       ~children: React.element,
       ~onChange: int => unit=?,
+      ~defaultIndex: int=?,
       ~className: string=?,
     ) => React.element = "Group"
   }

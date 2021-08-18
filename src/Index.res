@@ -10,9 +10,6 @@ module Hero = {
   let make = (~children) => <div> <div className=""> children </div> </div>
 }
 
-let allCudaVersions = [`10.0`, `10.1`, `10.2`, `11.0`, `11.1`, `11.2`]
-let xlaCudaVersions = [`10.0`, `10.1`, `10.2`, `11.0`, `11.1`]
-
 module Variant = {
   type build = Stable | Nightly
   type platform = CUDA(string) | CPU | CUDA_XLA(string)
@@ -38,8 +35,7 @@ module Variant = {
       </Tab>
   }
 }
-let builds = [Variant.Stable, Variant.Nightly]
-let defaultPlatforms = [Variant.CUDA("10.2"), Variant.CPU, Variant.CUDA_XLA("10.1")]
+
 let pipInstallCommnad = (selected: Variant.t) => {
   Js.Array.joinWith(
     " ",
@@ -65,75 +61,105 @@ let pipInstallCommnad = (selected: Variant.t) => {
   )
 }
 
-let default = () => {
-  let (state, setState) = React.useState(() => {
-    let s: Variant.t = {
-      build: Variant.Stable,
-      platform: Variant.CUDA("10.2"),
+type action =
+  | SelectBuild(string)
+  | SelectPlatform(string)
+  | SelectCudaVersion(string)
+
+type state = {selected: Variant.t}
+
+let reducer = (state, action) =>
+  switch action {
+  | SelectBuild(b) =>
+    let build = switch b {
+    | "Stable" => Variant.Stable
+    | "Nightly" => Variant.Nightly
+    | _ => Variant.Stable
     }
-    s
-  })
-  let availableCUDAVersions = (state: Variant.t) =>
-    switch state.platform {
-    | Variant.CUDA(_) => ["10.0", "10.1", "10.2", "11.0", "11.1", "11.2"]
-    | Variant.CUDA_XLA(_) => ["10.0", "10.1", "10.2", "11.0", "11.1"]
-    | Variant.CPU => []
-    }
-  let updatePlatfrom = (currentPlatform: Variant.platform, cudaVersionStr: string) =>
-    switch currentPlatform {
-    | Variant.CUDA(_) => Variant.CUDA(cudaVersionStr)
-    | Variant.CUDA_XLA(_) => Variant.CUDA_XLA(cudaVersionStr)
+    {selected: {...state.selected, build: build}}
+  | SelectPlatform(p) =>
+    let platform = switch p {
+    | "CUDA" => Variant.CUDA("10.2")
+    | "CUDA_XLA" => Variant.CUDA_XLA("10.1")
     | _ => Variant.CPU
     }
+    {selected: {...state.selected, platform: platform}}
+  | SelectCudaVersion(v) =>
+    switch state.selected.platform {
+    | CUDA(_) => {selected: {...state.selected, platform: CUDA(v)}}
+    | CUDA_XLA(_) => {selected: {...state.selected, platform: CUDA_XLA(v)}}
+    | _ => state
+    }
+  }
 
+let default = () => {
+  let (state, dispatch) = React.useReducer(
+    reducer,
+    {
+      selected: {
+        build: Variant.Stable,
+        platform: Variant.CUDA("10.2"),
+      },
+    },
+  )
+  let builds = ["Stable", "Nightly"]
+  let platforms = ["CUDA", "CPU", "CUDA_XLA"]
+  let cudaVersions = ["10.0", "10.1", "10.2", "11.0", "11.1", "11.2"]
+  let xlaCudaVersions = ["10.0", "10.1", "10.2", "11.0", "11.1"]
+  let defaultIndexOfCudaVersion = (state: state) =>
+    switch state.selected.platform {
+    | Variant.CUDA(v) => Js.Array.indexOf(v, cudaVersions)
+    | Variant.CUDA_XLA(v) => Js.Array.indexOf(v, xlaCudaVersions)
+    | Variant.CPU => 0
+    }
+  let availableCudaVersions = (state: state) =>
+    switch state.selected.platform {
+    | Variant.CUDA(_) => Some(cudaVersions)
+    | Variant.CUDA_XLA(_) => Some(xlaCudaVersions)
+    | Variant.CPU => None
+    }
   <Hero>
     <div
       className=`rounded-xl overflow-hidden bg-gradient-to-r from-sky-400 to-blue-600 flex flex-col items-center justify-center w-full`>
       <div className="w-full max-w-md px-2 py-16 sm:px-0">
-        <Tab.Group onChange={index => setState(s => {...s, build: builds[index]})}>
+        <Tab.Group onChange={index => dispatch(SelectBuild(builds[index]))}>
           <Tab.List className="flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
             {({selectedIndex}) =>
               builds
               |> Js.Array.map(b => {
-                let s = switch b {
-                | Variant.Stable => "Stable"
-                | Variant.Nightly => "Nightly"
-                }
-                <Variant.Option name=s />
+                <Variant.Option name=b />
               })
               |> React.array}
           </Tab.List>
         </Tab.Group>
-        <Tab.Group onChange={index => setState(s => {...s, platform: defaultPlatforms[index]})}>
+        <Tab.Group onChange={index => dispatch(SelectPlatform(platforms[index]))}>
           <Tab.List className="my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
             {({selectedIndex}) =>
-              defaultPlatforms
-              |> Js.Array.map(p => {
-                let platformStr = switch p {
-                | Variant.CUDA(_) => "CUDA"
-                | Variant.CUDA_XLA(_) => "XLA"
-                | Variant.CPU => "CPU"
-                }
-                <Variant.Option name=platformStr />
+              platforms
+              |> Js.Array.map(v => {
+                <Variant.Option name=v />
               })
               |> React.array}
           </Tab.List>
         </Tab.Group>
         <Tab.Group
-          onChange={index =>
-            setState(s => {
-              ...s,
-              platform: updatePlatfrom(s.platform, availableCUDAVersions(state)[index]),
-            })}>
-          <Tab.List className="flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
+          defaultIndex={defaultIndexOfCudaVersion(state)}
+          onChange={index => dispatch(SelectCudaVersion(cudaVersions[index]))}>
+          <Tab.List className="my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
             {({selectedIndex}) =>
-              availableCUDAVersions(state)
-              |> Js.Array.map((category: string) => <Variant.Option name=category />)
-              |> React.array}
+              switch availableCudaVersions(state) {
+              | Some(version) =>
+                version
+                |> Js.Array.map(v => {
+                  <Variant.Option name=v />
+                })
+                |> React.array
+              | None => <div />
+              }}
           </Tab.List>
           <Tab.Panels className="mt-2">
             {_ =>
-              availableCUDAVersions(state)
+              cudaVersions
               |> Js.Array.mapi((v, idx) =>
                 <Tab.Panel
                   key=v
@@ -145,7 +171,7 @@ let default = () => {
                         `focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60`,
                       ],
                     )}>
-                  {_ => React.string(pipInstallCommnad(state))}
+                  {_ => React.string(pipInstallCommnad(state.selected))}
                 </Tab.Panel>
               )
               |> React.array}
