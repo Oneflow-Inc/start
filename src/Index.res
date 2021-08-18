@@ -5,14 +5,6 @@ module P = {
 
 open HeadlessUI
 
-type category = {
-  id: int,
-  title: string,
-  date: string,
-  commentCount: int,
-  shareCount: int,
-}
-
 module Hero = {
   @react.component
   let make = (~children) => <div> <div className=""> children </div> </div>
@@ -50,68 +42,21 @@ module Variant = {
   }
 }
 
+type selected = {
+  build: string,
+  platform: string,
+  package: string,
+  cudaVersion: string,
+}
 let default = () => {
-  let (categories, setState) = React.useState(() =>
-    Js.Dict.fromArray([
-      (
-        "CUDA",
-        [
-          {
-            id: 1,
-            title: `python3 -m pip install -f https://release.oneflow.info oneflow==0.4.0+cu102`,
-            date: `5h ago`,
-            commentCount: 5,
-            shareCount: 2,
-          },
-          {
-            id: 2,
-            title: "So you`ve bought coffee... now what?",
-            date: `2h ago`,
-            commentCount: 3,
-            shareCount: 2,
-          },
-        ],
-      ),
-      (
-        "CPU",
-        [
-          {
-            id: 1,
-            title: `Is tech making coffee better or worse?`,
-            date: `Jan 7`,
-            commentCount: 29,
-            shareCount: 16,
-          },
-          {
-            id: 2,
-            title: `The most innovative things happening in coffee`,
-            date: `Mar 19`,
-            commentCount: 24,
-            shareCount: 12,
-          },
-        ],
-      ),
-      (
-        "CUDA-XLA",
-        [
-          {
-            id: 1,
-            title: `Ask Me Anything: 10 answers to your questions about coffee`,
-            date: `2d ago`,
-            commentCount: 9,
-            shareCount: 5,
-          },
-          {
-            id: 2,
-            title: "The worst advice we`ve ever heard about coffee",
-            date: `4d ago`,
-            commentCount: 1,
-            shareCount: 2,
-          },
-        ],
-      ),
-    ])
-  )
+  let (categories, setState) = React.useState(() => {
+    {
+      build: `Stable`,
+      platform: `CUDA`,
+      package: `pip`,
+      cudaVersion: `10.2`,
+    }
+  })
   <Hero>
     <div
       className=`rounded-xl overflow-hidden bg-gradient-to-r from-sky-400 to-blue-600 flex flex-col items-center justify-center w-full`>
@@ -127,7 +72,7 @@ let default = () => {
         <Tab.Group>
           <Tab.List className="my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl">
             {({selectedIndex}) =>
-              Js.Dict.keys(categories)
+              platforms
               |> Js.Array.map((category: string) => <Variant.Option name=category />)
               |> React.array}
           </Tab.List>
@@ -141,8 +86,7 @@ let default = () => {
           </Tab.List>
           <Tab.Panels className="mt-2">
             {_ =>
-              categories
-              |> Js.Dict.values
+              [1, 2, 3, 4, 5]
               |> Js.Array.mapi((posts, idx) =>
                 <Tab.Panel
                   key={string_of_int(idx)}
@@ -154,7 +98,8 @@ let default = () => {
                         `focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60`,
                       ],
                     )}>
-                  {_ => React.string(posts[0].title)}
+                  {_ =>
+                    React.string(`python3 -m pip install -f https://release.oneflow.info oneflow==0.4.0+cu102`)}
                 </Tab.Panel>
               )
               |> React.array}
