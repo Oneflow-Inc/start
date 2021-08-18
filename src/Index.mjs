@@ -12,6 +12,37 @@ function Index$Hero(Props) {
                 }, children));
 }
 
+var allCudaVersions = [
+  "10.0",
+  "10.1",
+  "10.2",
+  "11.0",
+  "11.1",
+  "11.2"
+];
+
+var builds = [
+  "Stable",
+  "Nightly"
+];
+
+function Index$Variant$Option(Props) {
+  var name = Props.name;
+  return React.createElement(React$1.Tab, {
+              className: (function (param) {
+                  return [
+                            "w-full py-2.5 text-sm leading-5 font-medium rounded-lg",
+                            "focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60",
+                            param.selected ? "bg-white shadow text-blue-700 text-opacity-80" : "text-blue-100 hover:bg-white hover:bg-opacity-10 hover:text-white"
+                          ].join(" ");
+                }),
+              children: (function (param) {
+                  return name;
+                }),
+              key: name
+            });
+}
+
 function $$default(param) {
   var match = React.useState(function () {
         return Js_dict.fromArray([
@@ -81,22 +112,34 @@ function $$default(param) {
                   }, React.createElement("div", {
                         className: "w-full max-w-md px-2 py-16 sm:px-0"
                       }, React.createElement(React$1.Tab.Group, {
+                            children: React.createElement(React$1.Tab.List, {
+                                  children: (function (param) {
+                                      return builds.map(function (category) {
+                                                  return React.createElement(Index$Variant$Option, {
+                                                              name: category
+                                                            });
+                                                });
+                                    }),
+                                  className: "flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
+                                })
+                          }), React.createElement(React$1.Tab.Group, {
+                            children: React.createElement(React$1.Tab.List, {
+                                  children: (function (param) {
+                                      return Object.keys(categories).map(function (category) {
+                                                  return React.createElement(Index$Variant$Option, {
+                                                              name: category
+                                                            });
+                                                });
+                                    }),
+                                  className: "my-1 flex p-1 space-x-1 bg-blue-900 bg-opacity-20 rounded-xl"
+                                })
+                          }), React.createElement(React$1.Tab.Group, {
                             children: null
                           }, React.createElement(React$1.Tab.List, {
                                 children: (function (param) {
-                                    return Object.keys(categories).map(function (category) {
-                                                return React.createElement(React$1.Tab, {
-                                                            className: (function (param) {
-                                                                return [
-                                                                          "w-full py-2.5 text-sm leading-5 font-medium rounded-lg",
-                                                                          "focus:outline-none focus:ring-2 ring-offset-2 ring-offset-blue-400 ring-white ring-opacity-60",
-                                                                          param.selected ? "bg-white shadow text-blue-700 text-opacity-80" : "text-blue-100 hover:bg-white hover:bg-opacity-10 hover:text-white"
-                                                                        ].join(" ");
-                                                              }),
-                                                            children: (function (param) {
-                                                                return category;
-                                                              }),
-                                                            key: category
+                                    return allCudaVersions.map(function (category) {
+                                                return React.createElement(Index$Variant$Option, {
+                                                            name: category
                                                           });
                                               });
                                   }),
