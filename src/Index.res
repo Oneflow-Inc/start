@@ -47,7 +47,18 @@ let pipInstallCommnad = (selected: Variant.t) => {
       "python3 -m pip install oneflow -f",
       switch selected.build {
       | Variant.Stable => "https://release.oneflow.info"
-      | Variant.Nightly => "https://staging.oneflow.info/branch/master/cu101"
+      | Variant.Nightly =>
+        Js.Array.joinWith(
+          "",
+          [
+            "https://staging.oneflow.info/branch/master/",
+            switch selected.platform {
+            | Variant.CUDA(ver) => "cu" ++ Js.String.replace(".", "", ver)
+            | Variant.CUDA_XLA(ver) => "cu" ++ Js.String.replace(ver, ".", "") ++ ".xla"
+            | Variant.CPU => "cpu"
+            },
+          ],
+        )
       },
       "",
     ],

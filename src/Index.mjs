@@ -190,9 +190,23 @@ function $$default(param) {
                                                               }),
                                                             children: (function (param) {
                                                                 var match = state.build;
+                                                                var tmp;
+                                                                if (match) {
+                                                                  var ver = state.platform;
+                                                                  var tmp$1;
+                                                                  tmp$1 = typeof ver === "number" ? "cpu" : (
+                                                                      ver.TAG === /* CUDA */0 ? "cu" + ver._0.replace(".", "") : "cu" + "".replace(ver._0, ".") + ".xla"
+                                                                    );
+                                                                  tmp = [
+                                                                      "https://staging.oneflow.info/branch/master/",
+                                                                      tmp$1
+                                                                    ].join("");
+                                                                } else {
+                                                                  tmp = "https://release.oneflow.info";
+                                                                }
                                                                 return [
                                                                           "python3 -m pip install oneflow -f",
-                                                                          match ? "https://staging.oneflow.info/branch/master/cu101" : "https://release.oneflow.info",
+                                                                          tmp,
                                                                           ""
                                                                         ].join(" ");
                                                               }),
