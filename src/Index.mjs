@@ -61,8 +61,8 @@ function Index$Pip$Panel(Props) {
 function pipInstallCommnad(selected) {
   var match = selected.build;
   return [
-            "python3 -m pip install oneflow -f",
-            match ? "https://staging.oneflow.info/branch/master/" + platformPlusName(selected.platform) : "https://release.oneflow.info oneflow==0.4.0+" + platformPlusName(selected.platform),
+            "python3 -m pip install -f",
+            match ? "https://staging.oneflow.info/branch/master/" + platformPlusName(selected.platform) + " oneflow" : "https://release.oneflow.info oneflow==0.4.0+" + platformPlusName(selected.platform),
             ""
           ].join(" ");
 }

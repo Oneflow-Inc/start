@@ -62,12 +62,13 @@ let pipInstallCommnad = (selected: Variant.t) => {
   Js.Array.joinWith(
     " ",
     [
-      "python3 -m pip install oneflow -f",
+      "python3 -m pip install -f",
       switch selected.build {
       | Variant.Stable =>
         "https://release.oneflow.info oneflow==0.4.0+" ++ platformPlusName(selected.platform)
       | Variant.Nightly =>
-        "https://staging.oneflow.info/branch/master/" ++ platformPlusName(selected.platform)
+        "https://staging.oneflow.info/branch/master/" ++
+        platformPlusName(selected.platform) ++ " oneflow"
       },
       "",
     ],
